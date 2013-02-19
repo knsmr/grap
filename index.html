@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <meta charset=UTF-8 />
+    <title>Card Game</title>
+    <script src="jquery.js"></script>
+    <script src="underscore.js"></script>
+    <script src="raphael.js"></script>
+    <script src="game.js"></script>
+
+    <style type="text/css">
+      #paper {
+      margin: 10px;
+      }
+
+      #score {
+      width: 400px;
+      background: #ffbb33;
+      padding: 5px;
+      font-weight: bold;
+      }
+
+      #board {
+      float: left;
+      }
+
+      #pannel {
+      float: left;
+      width: 400px;
+      height: 600px;
+      margin: 40px 0 0 20px;
+      border: 2px solid black;
+      border-radius: 3px;
+      }
+
+      #pannel p {
+      padding: 10px;
+      }
+
+      #score-table {
+      margin: 10px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 3px;
+      }
+
+      #score-table tr {
+      background-color: #ddddff;
+      }
+
+      #score-table td, th {
+      padding: 6px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Newton Poker</h1>
+    <div id="board">
+      <div id="score">Score: 0</div>
+      <div id="paper"></div>
+    </div>
+    <div id="pannel">
+      <table id="score-table">
+	<tr><th>Hand</th><th>Score</th></tr>
+	<tr><td>One Pair</td><td>100</td>
+	<tr><td>Two Pair</td><td>300</td></tr>
+	<tr><td>Three of A Kind</td><td>500</td></tr>
+	<tr><td>Full House</td><td>800</td></tr>
+	<tr><td>Four of A Kind</td><td>1000</td></tr>
+	<tr><td>Straight</td><td>900</td></tr>
+	<tr><td>Royal Straight</td><td>1000</td></tr>
+	<tr><td>Flush</td><td>800</td></tr>
+	<tr><td>Straight Flush</td><td>1200</td></tr>
+	<tr><td>Royal Straight Flush</td><td>1500</td></tr>
+      </table>
+      <p>Drop the card in the 5 x 5 matrix. Make hands as many as possible accross horizontal and vertical lines. Move the card using cursor keys.</p>
+    </div>
+  </body>
+</html>
