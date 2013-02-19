@@ -210,9 +210,17 @@ $(function() {
 	    }
 	    return (total == 25);
 	},
+	onCrossingAsc: function(x, y) {
+	    return ((x + y) === 7) ? true : false;
+	},
+	onCrossingDesc: function(x, y) {
+	    return ((y - x) === 3) ? true : false;
+	},
 	handCheck: function(card) {
 	    var handX = [],
-                handY = [];
+                handY = [],
+	        handCrs1 = [],
+	        handCrs2 = [];
 
 	    var addScore = function(poker) {
 		var h = poker.toString().replace(/([A-Z])/g, " $1");
