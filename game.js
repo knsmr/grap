@@ -214,10 +214,10 @@ $(function() {
 	    return (this.onDiagonalAsc(x, y) || this.onDiagonalDesc(x, y));
 	},
 	onDiagonalAsc: function(x, y) {
-	    return ((x + y) === 7) ? true : false;
+	    return ((x + y) === 7);
 	},
 	onDiagonalDesc: function(x, y) {
-	    return ((y - x) === 3) ? true : false;
+	    return ((y - x) === 3);
 	},
 	addScore: function(poker) {
 	    var h = poker.toString().replace(/([A-Z])/g, " $1");
