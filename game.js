@@ -26,7 +26,7 @@ $(function() {
 	place: function(x, y) {
 	    this.x = x;
 	    this.y = y;
-	    Board._b[x][y] = this;
+	    Board._b[y][x] = this;
 	    this.draw();
 	    return this;
 	},
@@ -40,6 +40,7 @@ $(function() {
 	    this.y = y;
 	    this.rect.remove();
 	    this.draw();
+	    return this;
 	},
 	moveSideways: function(direction) {
 	    if (Game.State.isRunning) {
@@ -194,10 +195,12 @@ $(function() {
 		       ['', '', '', '', ''], // 5
 		       ['', '', '', '', ''], // 6
 		       ['', '', '', '', '']]; // 7
+	    this.nextCard = Deck.openCard().place(2, 0);
 	    this.putCardInDropzone();
 	},
 	putCardInDropzone: function() {
-	    this.selectedCard = Deck.openCard().place(2, 1);
+	    this.selectedCard = this.nextCard.move(2, 1);
+	    this.nextCard = Deck.openCard().place(2, 0);
 	},
 	topPosition: function(x) {
 	    for (var y = 3; y <= 7; y++) {
