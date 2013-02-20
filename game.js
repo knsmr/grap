@@ -228,68 +228,62 @@ $(function() {
 		Screen.addScore(poker.score());
 	    }
 	},
-	handCheck: function(card) {
-	    var handH = [],  // horizontal line
-                handV = [],  // vertical line
-	        handA = [],  // diagonal ascending line '/'
-	        handD = [];  // diagonal decending line '\'
+	collectHands: function(card) {
+	    var hand = [],
+	        hands= [];
 
 	    // collect cards on the horizontal line
 	    for (var x = 0; x <= 4; x++) {
 		if (this._b[card.y][x] instanceof Card) {
-		    handH.push(this._b[card.y][x]);
+		    hand.push(this._b[card.y][x]);
 		}
 	    }
+	    if (hand.length == 5) { hands.push(hand); }
+	    hand = [];
 
 	    // collect cards on the vertical line
 	    for (var y = 3; y <= 7; y++) {
 		if (this._b[y][card.x] instanceof Card) {
-		    handV.push(this._b[y][card.x]);
+		    hand.push(this._b[y][card.x]);
 		}
 	    }
+	    if (hand.length == 5) { hands.push(hand); }
+	    hand = [];
 
-	    // collect card on the diagonal lines if necessary
+	    // collect cards on the diagonal lines if necessary
 	    if (Board.onDiagonalLine(card.x, card.y)) {
 		// collect cards on the diagonal line (ascending)
 		for (var x = 0; x <= 4; x++) {
 		    if (this._b[7 - x][x] instanceof Card) {
-			handA.push(this._b[7 - x][x]);
+			hand.push(this._b[7 - x][x]);
 		    }
 		}
+		if ((hand.length == 5) && (Board.onDiagonalAsc(card.x, card.y))) {
+		    hands.push(hand);
+		}
+		hand = [];
+
 		// collect cards on the diagonal line (descending)
 		for (var x = 0; x <= 4; x++) {
 		    if (this._b[x + 3][x] instanceof Card) {
-			handD.push(this._b[x + 3][x]);
+			hand.push(this._b[x + 3][x]);
 		    }
 		}
+		if ((hand.length == 5) && (Board.onDiagonalDesc(card.x, card.y))) {
+		    hands.push(hand);
+		}
+		hand = [];
 	    }
 
-	    if (handH.length == 5) {
-		var p = new Poker(handH);
+	    return hands;
+	},
+	handCheck: function(card) {
+	    var hands = this.collectHands(card);
+	    for (var i = 0, l = hands.length; i < l; i++) {
+		var p = new Poker(hands[i]);
 		if (p.score()) {
 		    this.addScore(p);
-		    _.each(handH, function(card) { card.glow(); });
-		}
-	    }
-	    if (handV.length == 5) {
-		var p = new Poker(handV);
-		if (p.score()) {
-		    this.addScore(p);
-		    _.each(handV, function(card) { card.glow(); });
-		}
-	    }
-	    if ((handA.length == 5) && (Board.onDiagonalAsc(card.x, card.y))) {
-		var p = new Poker(handA);
-		if (p.score()) {
-		    this.addScore(p);
-		    _.each(handA, function(card) { card.glow(); });
-		}
-	    }
-	    if ((handD.length == 5) && (Board.onDiagonalDesc(card.x, card.y))) {
-		var p = new Poker(handD);
-		if (p.score()) {
-		    this.addScore(p);
-		    _.each(handD, function(card) { card.glow(); });
+		    _.each(hands[i], function(card) { card.glow(); });
 		}
 	    }
 	}
