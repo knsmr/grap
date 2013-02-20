@@ -279,14 +279,14 @@ $(function() {
 		    _.each(handY, function(card) { card.glow(); });
 		}
 	    }
-	    if (handDiagonalA.length == 5) {
+	    if ((handDiagonalA.length == 5) && (Board.onDiagonalAsc(card.x, card.y))) {
 		var p = new Poker(handDiagonalA);
 		if (p.score()) {
 		    addScore(p);
 		    _.each(handDiagonalA, function(card) { card.glow(); });
 		}
 	    }
-	    if (handDiagonalD.length == 5) {
+	    if ((handDiagonalD.length == 5) && (Board.onDiagonalDesc(card.x, card.y))) {
 		var p = new Poker(handDiagonalD);
 		if (p.score()) {
 		    addScore(p);
