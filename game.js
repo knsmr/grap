@@ -224,11 +224,14 @@ $(function() {
 		}
 	    };
 
+	    // collect cards on the horizontal line
 	    for (var x = 0; x <= 4; x++) {
 		if (this._b[card.y][x] instanceof Card) {
 		    handX.push(this._b[card.y][x]);
 		}
 	    }
+
+	    // collect cards on the vertical line
 	    for (var y = 3; y <= 7; y++) {
 		if (this._b[y][card.x] instanceof Card) {
 		    handY.push(this._b[y][card.x]);
