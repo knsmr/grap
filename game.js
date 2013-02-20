@@ -194,6 +194,10 @@ $(function() {
 		       ['', '', '', '', ''], // 5
 		       ['', '', '', '', ''], // 6
 		       ['', '', '', '', '']]; // 7
+	    this.putCardInDropzone();
+	},
+	putCardInDropzone: function() {
+	    this.selectedCard = Deck.openCard().place(2, 1);
 	},
 	topPosition: function(x) {
 	    for (var y = 3; y <= 7; y++) {
@@ -374,9 +378,9 @@ $(function() {
 
 	init: function() {
 	    Screen.init();
-	    Board.init();
 	    Deck.init();
 	    Deck.shuffle();
+	    Board.init();
 	    this.State.init();
 	},
 	keyeventInit: function() {
@@ -392,29 +396,28 @@ $(function() {
 		    };
 		    break;
 		case 37:
-		    Game.selectedCard.moveSideways(-1);
+		    Board.selectedCard.moveSideways(-1);
 		    break;
 		case 38:
 		    // alert( "up pressed" );
 		    break;
 		case 39:
-		    Game.selectedCard.moveSideways(1);
+		    Board.selectedCard.moveSideways(1);
 		    break;
 		case 40:
 		    // drop it
 		    if (Game.State.isInDropzone) {
-			if (Game.selectedCard.fall()) {
-			    Game.selectedCard = Deck.openCard().place(2, 1);
+			if (Board.selectedCard.fall()) {
+			    Board.putCardInDropzone();
 			}
 		    } else {
-			Game.selectedCard = Deck.openCard().place(2, 1);
+			Board.putCardInDropzone();
 		    }
 		}
 	    });
 	},
 	run: function() {
 	    this.State.isRunning = true;
-	    this.selectedCard = Deck.openCard().place(2, 1);
 	    this.State.isInDropzone = true;
 	},
 	checkOver: function() {
