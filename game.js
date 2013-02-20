@@ -219,21 +219,20 @@ $(function() {
 	onDiagonalDesc: function(x, y) {
 	    return ((y - x) === 3) ? true : false;
 	},
+	addScore: function(poker) {
+	    var h = poker.toString().replace(/([A-Z])/g, " $1");
+	    Screen.flashMessage(h);
+
+	    var s = poker.score();
+	    if (s != 0) {
+		Screen.addScore(poker.score());
+	    }
+	},
 	handCheck: function(card) {
 	    var handX = [],
                 handY = [],
 	        handDiagonalA = [],  // ascending line '/'
 	        handDiagonalD = [];  // decending line '\'
-
-	    var addScore = function(poker) {
-		var h = poker.toString().replace(/([A-Z])/g, " $1");
-		Screen.flashMessage(h);
-
-		var s = poker.score();
-		if (s != 0) {
-		    Screen.addScore(poker.score());
-		}
-	    };
 
 	    // collect cards on the horizontal line
 	    for (var x = 0; x <= 4; x++) {
@@ -268,28 +267,28 @@ $(function() {
 	    if (handX.length == 5) {
 		var p = new Poker(handX);
 		if (p.score()) {
-		    addScore(p);
+		    this.addScore(p);
 		    _.each(handX, function(card) { card.glow(); });
 		}
 	    }
 	    if (handY.length == 5) {
 		var p = new Poker(handY);
 		if (p.score()) {
-		    addScore(p);
+		    this.addScore(p);
 		    _.each(handY, function(card) { card.glow(); });
 		}
 	    }
 	    if ((handDiagonalA.length == 5) && (Board.onDiagonalAsc(card.x, card.y))) {
 		var p = new Poker(handDiagonalA);
 		if (p.score()) {
-		    addScore(p);
+		    this.addScore(p);
 		    _.each(handDiagonalA, function(card) { card.glow(); });
 		}
 	    }
 	    if ((handDiagonalD.length == 5) && (Board.onDiagonalDesc(card.x, card.y))) {
 		var p = new Poker(handDiagonalD);
 		if (p.score()) {
-		    addScore(p);
+		    this.addScore(p);
 		    _.each(handDiagonalD, function(card) { card.glow(); });
 		}
 	    }
