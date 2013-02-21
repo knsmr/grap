@@ -7,6 +7,7 @@ $(function() {
 	}
 	this.suit = suit;
 	this.num = num;
+	this.focus = false;
     };
     Card.prototype = {
 	Suits: ['♠', '♥', '♦', '♣'],
@@ -53,6 +54,7 @@ $(function() {
 	fall: function() {
 	    var y = Board.topPosition(this.x) - 1;
 	    if (y == 2) return false;
+	    this.focus = false;
 	    this.move(this.x, y);
 	    Board.handCheck(this);
 	    Game.checkOver();
@@ -129,11 +131,11 @@ $(function() {
 	    });
 	})(),
 	flashMessage: function(msg) {
-	    var m = this.paper.text(100, 30, msg).attr({'font-size': 24});
-	    m.animate({'font-size': 36, x: 180}, 80, function() {
+	    var m = this.paper.text(100, 185, msg).attr({'font-size': 24});
+	    m.animate({'font-size': 36, x: 180}, 100, function() {
 		window.setTimeout(function() {
 		    m.animate({'font-size': 40, y: 0}, 700, function() { m.remove(); });
-		}, 300);
+		}, 800);
 	    });
 	},
 	showMessage: (function() {
@@ -165,8 +167,18 @@ $(function() {
 	    var t = this.paper.text(abs_x + this.cardSize / 2, abs_y + this.cardSize / 2, card.toString());
 	    t.attr({fill: color, "font-size": this.cardSize - this.shim * 6});
 
+	    // Group the rectangle and the text. Also, set the glowing
+	    // effect on the rectangle if the card has a focus.
 	    card.rect = this.paper.set();
-	    card.rect.push(r, t);
+	    if (card.focus) {
+		var g = r.glow({
+		    width: 10,
+		    fill: true,
+		    opacity: 0.9,
+		    color: 'yellow'
+		});
+	    };
+	    card.rect.push(r, t, g);
 	    return card;
 	},
 	moveCard: function(card, dx, dy) {
@@ -199,8 +211,10 @@ $(function() {
 	    this.putCardInDropzone();
 	},
 	putCardInDropzone: function() {
-	    this.selectedCard = this.nextCard.move(2, 1);
+	    this.selectedCard = this.nextCard;
 	    this.nextCard = Deck.openCard().place(2, 0);
+	    this.selectedCard.focus = true;
+	    this.selectedCard.move(2, 1);
 	},
 	topPosition: function(x) {
 	    for (var y = 3; y <= 7; y++) {
