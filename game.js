@@ -34,13 +34,16 @@ $(function() {
 	draw: function() {
 	    Screen.drawCard(this);
 	},
+	redraw: function() {
+	    this.rect.remove();
+	    this.draw();
+	},
 	move: function(x, y) {
 	    Board._b[this.y][this.x] = '';
 	    Board._b[y][x] = this;
 	    this.x = x;
 	    this.y = y;
-	    this.rect.remove();
-	    this.draw();
+	    this.redraw();
 	    return this;
 	},
 	moveLeft:  function() { this.moveSideways(-1); },
@@ -59,6 +62,8 @@ $(function() {
 	    this.focus = false;
 	    this.move(this.x, y);
 	    Board.handCheck(this);
+	    Board.selectFocus.glow(true);
+	    Game.State.dropped();
 	    Game.checkOver();
 	    return true;
 	},
@@ -78,41 +83,42 @@ $(function() {
 	}
     };
 
-    var Deck = {
-	init: function() {
-	    this._ptr = 0;
-	    this._deck = (function() {
-		var d = [];
-		for (var s = 0; s < 4; s++) {
-		    for(var n = 1; n <= 13; n++) {
-			var card = new Card(s, n);
-			d.push(card);
-		    }
-		}
-		return d;
-	    })();
+    var Decks = []; // a collection to store five decks.
+
+    function Deck(cards) {
+	this._ptr = 0;
+	this._deck = cards;
+    }
+    Deck.prototype = {
+	addCard: function(card) {
+	    this._deck.push(card);
+	    this._ptr++;
 	},
 	peekCard: function() {
-	    return this._deck[this._ptr];
+	    return this._deck[this._ptr - 1];
 	},
 	openCard: function() {
-	    this._ptr++;
+	    this._ptr--;
 	    return this.peekCard();
 	},
-	shuffle: function() {
-	    this._deck = _.shuffle(this._deck);
+	available: function() {
+	    return (this._ptr > 1);
 	}
     };
 
     var Screen = {
 	shim: 7,   // defines px between cards
 	width: 380,
+	height: 0, // calculate from the width
 
 	init: function() {
+	    this.cardSize = (this.width - this.shim * 6) / 5;
+	    this.height = (this.cardSize + this.shim ) * 8 + this.shim;
+
 	    this.addScore('reset');
 	    if (this.paper) { this.paper.remove(); };
-	    this.paper = Raphael("paper", this.width, 600);
-	    this.paper.rect(0, 0, this.width, 600).attr({"fill": "#00bb00"});
+	    this.paper = Raphael("paper", this.width, this.height);
+	    this.paper.rect(0, 0, this.width, this.height).attr({"fill": "#00bb00"});
 	    this.cardSize = (this.width - this.shim * 6) / 5;
 	    this.drawMatirx();
 	},
@@ -149,7 +155,7 @@ $(function() {
 		    pp(raphaelMsg);
 		    raphaelMsg.remove();
 		} else {
-		    raphaelMsg = this.paper.text(200, 30, msg).attr({'font-size': 24});
+		    raphaelMsg = this.paper.text(200, 100, msg).attr({'font-size': 24});
 		}
 	    });
 	})(),
@@ -177,7 +183,7 @@ $(function() {
 		    width: 10,
 		    fill: true,
 		    opacity: 0.9,
-		    color: 'yellow'
+		    color: 'red'
 		});
 	    };
 	    card.rect.push(r, t, g);
@@ -200,21 +206,92 @@ $(function() {
     };
 
     var Board = {
+	ci: 2,            // the index of the deck to choose from.
+	selectedCard: '', // the card to drop in the dropzone.
+
 	init: function() {
-	    this._b = [['', '', '', '', ''], // line 0 : show the next candidate card
-		       ['', '', '', '', ''], // line 1 : a card to drop
-		       ['', '', '', '', ''], // line 2: blank
+	    this._b = [['', '', '', '', ''], // line 0 : choose zone
+		       ['', '', '', '', ''], // line 1 : dropzone
+		       ['', '', '', '', ''], // line 2 : blank
 		       ['', '', '', '', ''], // 3..7: the matrix
 		       ['', '', '', '', ''], // 4
 		       ['', '', '', '', ''], // 5
 		       ['', '', '', '', ''], // 6
 		       ['', '', '', '', '']]; // 7
-	    this.nextCard = Deck.openCard().place(2, 0);
-	    this.putCardInDropzone();
+	    this.prepareDecks();
+	    this.cs = 2;
+	    this.selectFocus.glow(true);
+	},
+	selectFocus: {
+	    glow: function(val) {
+		var s = Board._b[0][Board.ci];
+		s.focus = val;
+		s.redraw();
+	    },
+	    moveFocus: function(index) {
+		this.glow(false);
+		Board.ci = index;
+		this.glow(true);
+	    },
+	    availableDeck: function(indexes) {
+		return _.find(indexes, function(c) {
+		    return (!(Board._b[0][c] === ''));
+		});
+	    },
+	    moveLeft: function() {
+		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
+		    return x < Board.ci;
+		});
+		candidates.reverse();
+		var idx = this.availableDeck(candidates);
+		if (typeof idx === 'undefined') return;
+		this.moveFocus(idx);
+	    },
+	    moveRight: function() {
+		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
+		    return x > Board.ci;
+		});
+		var idx = this.availableDeck(candidates);
+		if (typeof idx === 'undefined') return;
+		this.moveFocus(idx);
+	    }
+	},
+	prepareDecks: function() {
+	    for (var i = 0; i < 5; i++) {
+		this._b[0][i] = Decks[i].peekCard().place(i, 0);
+	    }
+	},
+	openNextCard: function(i) {
+	    if(Decks[i].available()) {
+		this._b[0][i] = Decks[i].openCard().place(i, 0);
+		pp(Decks[i]._ptr);
+	    } else {
+		var availableDecks = [],
+		    left, right;
+		for (var d = 1; d <= 4; d++) {
+		    left  = Board.ci - d;
+		    if ((left >= 0) && Decks[left].available()) {
+			return Board.ci -= d;
+		    }
+		    right = Board.ci + d;
+		    if ((right <= 4) && Decks[right].available()) {
+			return Board.ci += d;
+		    }
+		}
+	    }
+	},
+	chooseCard: function() {
+	    var chosen = this._b[0][this.ci];
+	    chosen.move(this.ci, 1);
+	    this.selectedCard = chosen;
+	    chosen.focus = true;
+	    chosen.redraw();
+	    Game.State.chosen();
+	    this.openNextCard(this.ci);
 	},
 	putCardInDropzone: function() {
 	    this.selectedCard = this.nextCard;
-	    this.nextCard = Deck.openCard().place(2, 0);
+	    this.nextCard = Decks[2].openCard().place(2, 0);
 	    this.selectedCard.focus = true;
 	    this.selectedCard.move(2, 1);
 	},
@@ -390,21 +467,60 @@ $(function() {
     var Game = {
 	State: {
 	    init: function() {
-		this.isRunning = false;
+		this.isRunning = true;
 		this.isInDropzone = false;
+		this.isChoosingTheDeck = true;
+	    },
+	    dropped: function() {
+		this.isInDropzone = false;
+		this.isChoosingTheDeck = true;
+	    },
+	    chosen: function() {
+		this.isInDropzone = true;
+		this.isChoosingTheDeck = false;
 	    }
 	},
 
 	init: function() {
 	    Screen.init();
-	    Deck.init();
-	    Deck.shuffle();
+	    this.initDecks();
 	    Board.init();
 	    this.State.init();
+	},
+	initDecks: function() {
+	    var decks = [];
+
+	    for (var i = 0; i < 5; i++) {
+		decks.push(new Deck([]));
+	    }
+
+	    var deck = (function() {
+		var deck = [], card;
+		for (var s = 0; s < 4; s++) {
+		    for(var n = 1; n <= 13; n++) {
+	    		deck.push(new Card(s, n));
+		    }
+		}
+		return _.shuffle(deck);
+	    })();
+
+	    for (var i = 0, ii = deck.length; i < ii; i++) {
+		var d = _.random(4);
+		decks[d].addCard(deck[i]);
+	    }
+	    Decks = decks;
 	},
 	keyeventInit: function() {
 	    // left-37, up-38, right-39, down-40
 	    $(document).keydown(function(e) {
+		var target;
+		if (Game.State.isInDropzone) {
+		    target = Board.selectedCard;
+		} else if (Game.State.isChoosingTheDeck) {
+		    target = Board.selectFocus;
+		}
+		var running = Game.State.isRunning;
+
 		switch(e.keyCode) {
 		case 89:
 		    // (y)es key
@@ -415,29 +531,32 @@ $(function() {
 		    };
 		    break;
 		case 37:
-		    Board.selectedCard.moveLeft();
+		    if (running) target.moveLeft();
 		    break;
 		case 38:
 		    // alert( "up pressed" );
 		    break;
 		case 39:
-		    Board.selectedCard.moveRight();
+		    if (running) target.moveRight();
 		    break;
 		case 40:
 		    // drop it
-		    if (Game.State.isInDropzone) {
-			if (Board.selectedCard.fall()) {
-			    Board.putCardInDropzone();
+		    if (running) {
+			if (Game.State.isInDropzone) {
+			    if (Board.selectedCard.fall()) {
+				Game.State.dropped();
+			    }
+			} else if (Game.State.isChoosingTheDeck) {
+			    if (Board.chooseCard()) {
+				Game.State.chosen();
+			    }
 			}
-		    } else {
-			Board.putCardInDropzone();
 		    }
 		}
 	    });
 	},
 	run: function() {
 	    this.State.isRunning = true;
-	    this.State.isInDropzone = true;
 	},
 	checkOver: function() {
 	    if (Board.isFilled()) {
@@ -451,7 +570,7 @@ $(function() {
 	    for(var x = 0; x < 5; x++) {
 		for(var y = 0; y <= 6; y++) {
 		    if (y == 1) continue;
-		    Deck.openCard().place(x, y);
+		    Decks[2].openCard().place(x, y);
 		}
 	    }
 	}
