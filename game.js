@@ -43,6 +43,8 @@ $(function() {
 	    this.draw();
 	    return this;
 	},
+	moveLeft:  function() { this.moveSideways(-1); },
+	moveRight: function() { this.moveSideways( 1); },
 	moveSideways: function(direction) {
 	    if (Game.State.isRunning) {
 		var i = this.x + direction;
@@ -413,13 +415,13 @@ $(function() {
 		    };
 		    break;
 		case 37:
-		    Board.selectedCard.moveSideways(-1);
+		    Board.selectedCard.moveLeft();
 		    break;
 		case 38:
 		    // alert( "up pressed" );
 		    break;
 		case 39:
-		    Board.selectedCard.moveSideways(1);
+		    Board.selectedCard.moveRight();
 		    break;
 		case 40:
 		    // drop it
