@@ -23,6 +23,15 @@ $(function() {
 	    this.color = "#222";
 	}
     };
+    Card.generateAll = function() {
+	var deck = [];
+	for (var s = 0; s < 4; s++) {
+	    for(var n = 1; n <= 13; n++) {
+		deck.push(new Card(s, n));
+	    }
+	}
+	return deck;
+    };
     Card.prototype = {
 	Suits: ['♠', '♥', '♦', '♣'],
 	Faces: ['A', 'J', 'Q', 'K'],
@@ -594,12 +603,7 @@ $(function() {
 	    }
 
 	    var deck = (function() {
-		var deck = [], card;
-		for (var s = 0; s < 4; s++) {
-		    for(var n = 1; n <= 13; n++) {
-	    		deck.push(new Card(s, n));
-		    }
-		}
+		var deck = Card.generateAll();
 		deck.push(new Card(2, 0)); // a joker
 		return _.shuffle(deck);
 	    })();
