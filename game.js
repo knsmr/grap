@@ -17,7 +17,7 @@ $(function() {
 	this.suit = suit;
 	this.num = num;
 	this.focus = false;
-	if ((suit == 1) || (suit == 2)) {
+	if (this.isRed()) {
 	    this.color = "#f33";
 	} else {
 	    this.color = "#222";
@@ -39,7 +39,7 @@ $(function() {
 	    var s, f;
 
 	    // if it's a joker
-	    if (this.num == 0) return "★★";
+	    if (this.isJoker()) return "★★";
 
 	    s = this.Suits[this.suit];
 	    if (this.num == 1) {
@@ -50,6 +50,12 @@ $(function() {
 		f = this.num.toString();
 	    }
 	    return s + f;
+	},
+	isRed: function() {
+	    return ((this.suit == 1) || (this.suit == 2));
+	},
+	isJoker: function() {
+	    return this.num == 0;
 	},
 	place: function(x, y) {
 	    this.x = x;
@@ -486,9 +492,23 @@ $(function() {
 	    return hands;
 	},
 	handCheck: function(card) {
-	    var hands = this.collectHands(card);
+	    var hands = this.collectHands(card),
+	        h, hand, p;
+	    var allCards = Card.generateAll();
+
 	    for (var i = 0, l = hands.length; i < l; i++) {
-		var p = new Poker(hands[i]);
+		h = hands[i].sort(function(a, b) { return a.num - b.num; });
+		if (h[0].isJoker()) {  // if it includes a joker
+		    p = _.max(_.map(allCards, function(c) {
+			hand = _.clone(h);
+			hand[0] = c;
+			return new Poker(hand);
+		    }), function(p) {
+			return p.score();
+		    });
+		} else {
+		    p = new Poker(hands[i]);
+		}
 		if (p.score()) {
 		    this.addScore(p);
 		    _.each(hands[i], function(card) { card.glow(); });
