@@ -519,16 +519,16 @@ $(function() {
     };
     Poker.prototype = {
 	scores: {
-	    OnePair:             100,
-	    TwoPair:             300,
-	    ThreeOfAKind:        500,
-	    FullHouse:           800,
-	    FourOfAKind:        1000,
-	    Straight:            900,
-	    RoyalStraight:      1000,
-	    Flush:               800,
-	    StraightFlush:      1200,
-	    RoyalStraightFlush: 1500
+	    OnePair:             200,
+	    TwoPair:             400,
+	    ThreeOfAKind:        800,
+	    FullHouse:          1800,
+	    FourOfAKind:        2000,
+	    Straight:           1400,
+	    RoyalStraight:      1800,
+	    Flush:              1000,
+	    StraightFlush:      2400,
+	    RoyalStraightFlush: 2800
 	},
 	toString: function() {
 	    var str = '';
