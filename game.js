@@ -209,7 +209,7 @@ $(function() {
 	    if (cards === null) return;
 
 	    this.openDecks[idx] = [];
-	    for (var i = 0; i < cards.length; i++) {
+	    for (var i = cards.length - 1; i >= 0; i--) {
 		cards[i].x = idx;
 		cards[i].y = 2 - i;
 	    	c = Screen.drawCardOnDeck(cards[i]);
@@ -218,14 +218,21 @@ $(function() {
 	    Board.selectFocus.glow(false);
 	},
 	drawCardOnDeck: function(card) {
-	    return this.drawCard(card, true);
+	    // card.y could be either 0, 1, 2
+	    var scale = 1 - ((3 - card.y) * 0.04);
+	    if (card.y == 0) card.y = 0.8;
+	    if (card.y == 1) card.y = 1.4;
+	    return this.drawCard(card, true, scale);
 	},
-	drawCard: function(card, deck) {
+	drawCard: function(card, deck, scale) {
             var abs_x = this.absolutePos(card.x),
-                abs_y = this.absolutePos(card.y);
+                abs_y = this.absolutePos(card.y),
+                s = 1.0;
 
 	    // if it should be drawn on the board, not deck area.
 	    if (typeof(deck) === "undefined") { abs_y += Screen.deckSpace; }
+	    // if the scale arg is given
+	    if (typeof(scale) === "number") { s = scale; }
 
 	    // a cardRect consists of two objects: a rect and text
 	    var r = this.paper.rect(abs_x, abs_y, this.cardSize, this.cardSize);
@@ -245,6 +252,7 @@ $(function() {
 		});
 	    };
 	    card.rect.push(r, t, g);
+	    card.rect.transform("s" + scale);
 	    return card;
 	},
 	moveCard: function(card, dx, dy) {
