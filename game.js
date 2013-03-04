@@ -109,6 +109,9 @@ $(function() {
 	available: function() {
 	    return (this._ptr > 1);
 	},
+	closedCards: function() {
+	    return this._ptr - 4;
+	},
 	nextThree: function() {
 	    var cards = [],
                 c,
@@ -216,6 +219,19 @@ $(function() {
 		this.openDecks[idx].push(c);
 	    }
 	    Board.selectFocus.glow(false);
+
+	    // draw cards that are closed
+	    var count = Decks[idx].closedCards();
+	    if (count > 0) this.drawClosedCards(count, idx);
+	},
+	drawClosedCards: function(n, idx) {
+	    var x = this.absolutePos(idx),
+	        y, r;
+	    for (var i = n; i > 0; i--) {
+		y = 68 - (i * 5);
+		r = this.paper.rect(x, y, this.cardSize, 2);
+		this.openDecks[idx].push({rect: r});
+	    }
 	},
 	drawCardOnDeck: function(card) {
 	    // card.y could be either 0, 1, 2
