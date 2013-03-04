@@ -607,27 +607,19 @@ $(function() {
 		}
 		var running = Game.State.isRunning;
 
-		switch(e.keyCode) {
-		case 89:
-		    // (y)es key
-		    if (!Game.State.isRunning) {
-			// FIXME: cannot start over properly
-			Game.init();
-			Game.run();
-		    };
-		    break;
-		case 37:
-		    if (running) target.moveLeft();
-		    break;
-		case 38:
-		    // alert( "up pressed" );
-		    break;
-		case 39:
-		    if (running) target.moveRight();
-		    break;
-		case 40:
-		    // drop it
-		    if (running) {
+		if (running) {
+		    switch(e.keyCode) {
+		    case 37:
+			target.moveLeft();
+			break;
+		    case 38:
+			// alert( "up pressed" );
+			break;
+		    case 39:
+			target.moveRight();
+			break;
+		    case 40:
+			// drop it
 			if (Game.State.isInDropzone) {
 			    if (Board.selectedCard.fall()) {
 				Game.State.dropped();
@@ -638,6 +630,12 @@ $(function() {
 			    }
 			}
 		    }
+		} else {
+		    if(e.keyCode == 89) {
+			// (y)es key
+			Game.init();
+			Game.run();
+		    };
 		}
 	    });
 	},
