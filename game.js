@@ -28,6 +28,10 @@ $(function() {
 	Faces: ['A', 'J', 'Q', 'K'],
 	toString: function() {
 	    var s, f;
+
+	    // if it's a joker
+	    if (this.num == 0) return "★★";
+
 	    s = this.Suits[this.suit];
 	    if (this.num == 1) {
 		f = this.Faces[0];
@@ -596,6 +600,7 @@ $(function() {
 	    		deck.push(new Card(s, n));
 		    }
 		}
+		deck.push(new Card(2, 0)); // a joker
 		return _.shuffle(deck);
 	    })();
 
