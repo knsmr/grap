@@ -1,3 +1,12 @@
+// TODO:
+// - implement joker
+// - implement double score lines
+// - queue the flash message so they don't overlap at a time
+// - list up all the hands that have been made somewhere
+// - split up classes into files
+// - use jasmine?
+// - refactor collecthand function
+
 $(function() {
     var pp = console.log.bind(console);
 
