@@ -1,5 +1,4 @@
 // TODO:
-// - implement joker
 // - implement double score lines
 // - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made somewhere
