@@ -230,6 +230,8 @@ $(function() {
 	    for (var i = n; i > 0; i--) {
 		y = 68 - (i * 5);
 		r = this.paper.rect(x, y, this.cardSize, 2);
+		// store the raphael elem to remove it later the same
+		// way as cards.
 		this.openDecks[idx].push({rect: r});
 	    }
 	},
