@@ -423,13 +423,19 @@ $(function() {
 	    }
 	    return (total == 25);
 	},
-	onDiagonalLine: function(x, y) {
+	onDiagonalLine: function(card) {
+	    var x = card.x,
+                y = card.y;
 	    return (this.onDiagonalAsc(x, y) || this.onDiagonalDesc(x, y));
 	},
-	onDiagonalAsc: function(x, y) {
+	onDiagonalAsc: function(card) {
+	    var x = card.x,
+                y = card.y;
 	    return ((x + y) === 7);
 	},
-	onDiagonalDesc: function(x, y) {
+	onDiagonalDesc: function(card) {
+	    var x = card.x,
+                y = card.y;
 	    return ((y - x) === 3);
 	},
 	addScore: function(poker) {
@@ -459,13 +465,13 @@ $(function() {
 		});
 	    };
 
-	    var posDiagonal1 = function() {
+	    var posDiagonalAsc = function() {
 		return _.map([0, 1, 2, 3, 4], function(x) {
 		    return {x: x, y: 7 - x};
 		});
 	    };
 
-	    var posDiagonal2 = function() {
+	    var posDiagonalDesc = function() {
 		return _.map([0, 1, 2, 3, 4], function(x) {
 		    return {x: x, y: x + 3};
 		});
@@ -486,11 +492,11 @@ $(function() {
 	    hands.push(collectCards(posHorizontal, card));
 	    hands.push(collectCards(posVertical, card));
 
-	    if (this.onDiagonalAsc(card.x, card.y)) {
-		hands.push(collectCards(posDiagonal1, card));
+	    if (this.onDiagonalAsc(card)) {
+		hands.push(collectCards(posDiagonalAsc, card));
 	    }
-	    if (this.onDiagonalDesc(card.x, card.y)) {
-		hands.push(collectCards(posDiagonal2, card));
+	    if (this.onDiagonalDesc(card)) {
+		hands.push(collectCards(posDiagonalDesc, card));
 	    }
 
 	    hands = _.filter(hands, function(h) { return h; });
