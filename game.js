@@ -345,13 +345,15 @@ $(function() {
 		s.redraw();
 	    },
 	    moveFocus: function(index) {
+		// When the cursor is on the either edge.
+		if (typeof index === 'undefined') return;
 		this.glow(false);
 		Board.ci = index;
 		this.glow(true);
 	    },
 	    availableDeck: function(indexes) {
 		return _.find(indexes, function(c) {
-		    return (!(Board._b[0][c] === ''));
+		    return (Board._b[0][c] instanceof Card);
 		});
 	    },
 	    moveLeft: function() {
@@ -360,7 +362,6 @@ $(function() {
 		});
 		candidates.reverse();
 		var idx = this.availableDeck(candidates);
-		if (typeof idx === 'undefined') return;
 		this.moveFocus(idx);
 	    },
 	    moveRight: function() {
@@ -368,7 +369,6 @@ $(function() {
 		    return x > Board.ci;
 		});
 		var idx = this.availableDeck(candidates);
-		if (typeof idx === 'undefined') return;
 		this.moveFocus(idx);
 	    }
 	},
@@ -442,53 +442,58 @@ $(function() {
 	    }
 	},
 	collectHands: function(card) {
-	    // FIXME: refactor this fugly function
-	    var hand = [],
-	        hands= [];
+	    var hands = [],
+                self = this;
 
-	    // collect cards on the horizontal line
-	    for (var x = 0; x <= 4; x++) {
-		if (this._b[card.y][x] instanceof Card) {
-		    hand.push(this._b[card.y][x]);
-		}
-	    }
-	    if (hand.length == 5) { hands.push(hand); }
-	    hand = [];
+	    var posHorizontal = function(card) {
+		var y = card.y;
+		return _.map([0, 1, 2, 3, 4], function(x) {
+		    return {x: x, y: y};
+		});
+	    };
 
-	    // collect cards on the vertical line
-	    for (var y = 3; y <= 7; y++) {
-		if (this._b[y][card.x] instanceof Card) {
-		    hand.push(this._b[y][card.x]);
-		}
-	    }
-	    if (hand.length == 5) { hands.push(hand); }
-	    hand = [];
+	    var posVertical = function(card) {
+		var x = card.x;
+		return _.map([3, 4, 5, 6, 7], function(y) {
+		    return {x: x, y: y};
+		});
+	    };
 
-	    // collect cards on the diagonal lines if necessary
-	    if (Board.onDiagonalLine(card.x, card.y)) {
-		// collect cards on the diagonal line (ascending)
-		for (var x = 0; x <= 4; x++) {
-		    if (this._b[7 - x][x] instanceof Card) {
-			hand.push(this._b[7 - x][x]);
+	    var posDiagonal1 = function() {
+		return _.map([0, 1, 2, 3, 4], function(x) {
+		    return {x: x, y: 7 - x};
+		});
+	    };
+
+	    var posDiagonal2 = function() {
+		return _.map([0, 1, 2, 3, 4], function(x) {
+		    return {x: x, y: x + 3};
+		});
+	    };
+
+	    var collectCards = function(fn, card) {
+		var hand = [], p, pos;
+		pos = fn.call(self, card);
+		for (var i = 0, ii = pos.length; i < ii; i++) {
+		    p = pos[i];
+		    if (self._b[p.y][p.x] instanceof Card) {
+			hand.push(self._b[p.y][p.x]);
 		    }
 		}
-		if ((hand.length == 5) && (Board.onDiagonalAsc(card.x, card.y))) {
-		    hands.push(hand);
-		}
-		hand = [];
+		return (hand.length == 5) ? hand : null;
+	    };
 
-		// collect cards on the diagonal line (descending)
-		for (var x = 0; x <= 4; x++) {
-		    if (this._b[x + 3][x] instanceof Card) {
-			hand.push(this._b[x + 3][x]);
-		    }
-		}
-		if ((hand.length == 5) && (Board.onDiagonalDesc(card.x, card.y))) {
-		    hands.push(hand);
-		}
-		hand = [];
+	    hands.push(collectCards(posHorizontal, card));
+	    hands.push(collectCards(posVertical, card));
+
+	    if (this.onDiagonalAsc(card.x, card.y)) {
+		hands.push(collectCards(posDiagonal1, card));
+	    }
+	    if (this.onDiagonalDesc(card.x, card.y)) {
+		hands.push(collectCards(posDiagonal2, card));
 	    }
 
+	    hands = _.filter(hands, function(h) { return h; });
 	    return hands;
 	},
 	handCheck: function(card) {
