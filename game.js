@@ -1,5 +1,6 @@
 // TODO:
 // - implement double score lines
+// - force drop after a certain time passed
 // - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made somewhere
 // - split up classes into files
