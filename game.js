@@ -5,7 +5,6 @@
 // - list up all the hands that have been made somewhere
 // - split up classes into files
 // - use jasmine?
-// - refactor collecthand function
 
 $(function() {
     var pp = console.log.bind(console);
@@ -23,6 +22,9 @@ $(function() {
 	    this.color = "#222";
 	}
     };
+
+    function isCard(o) { return o instanceof Card; };
+
     Card.generateAll = function() {
 	var deck = [];
 	for (var s = 0; s < 4; s++) {
@@ -353,7 +355,7 @@ $(function() {
 	    },
 	    availableDeck: function(indexes) {
 		return _.find(indexes, function(c) {
-		    return (Board._b[0][c] instanceof Card);
+		    return (isCard(Board._b[0][c]));
 		});
 	    },
 	    moveLeft: function() {
@@ -410,7 +412,7 @@ $(function() {
 	},
 	topPosition: function(x) {
 	    for (var y = 3; y <= 7; y++) {
-		if (this._b[y][x] instanceof Card) { return y; }
+		if (isCard(this._b[y][x])) { return y; }
 	    }
 	    return 8; // very bottom
 	},
@@ -418,7 +420,7 @@ $(function() {
 	    var total = 0;
 	    for (var y = 3; y <= 7; y++) {
 		for (var x = 0; x <= 4; x++) {
-		    if (this._b[y][x] instanceof Card) { total += 1 };
+		    if (isCard(this._b[y][x])) { total += 1 };
 		}
 	    }
 	    return (total == 25);
