@@ -36,9 +36,11 @@ $(function() {
 	}
 	return deck;
     };
+
     Card.prototype = {
 	Suits: ['♠', '♥', '♦', '♣'],
 	Faces: ['A', 'J', 'Q', 'K'],
+
 	toString: function() {
 	    var s, f;
 
@@ -55,12 +57,15 @@ $(function() {
 	    }
 	    return s + f;
 	},
+
 	isRed: function() {
 	    return ((this.suit == 1) || (this.suit == 2));
 	},
+
 	isJoker: function() {
 	    return this.num == 0;
 	},
+
 	place: function(x, y) {
 	    this.x = x;
 	    this.y = y;
@@ -68,13 +73,16 @@ $(function() {
 	    this.draw();
 	    return this;
 	},
+
 	draw: function() {
 	    Screen.drawCard(this);
 	},
+
 	redraw: function() {
 	    this.rect.remove();
 	    this.draw();
 	},
+
 	move: function(x, y) {
 	    Board.put(this.x, this.y, '');
 	    Board.put(x, y, this);
@@ -85,6 +93,7 @@ $(function() {
 	},
 	moveLeft:  function() { this.moveSideways(-1); },
 	moveRight: function() { this.moveSideways( 1); },
+
 	moveSideways: function(direction) {
 	    if (Game.State.isRunning) {
 		var i = this.x + direction;
@@ -93,6 +102,7 @@ $(function() {
 		};
 	    }
 	},
+
 	fall: function() {
 	    var y = Board.topPosition(this.x) - 1;
 	    if (y == 2) return false;
@@ -104,6 +114,7 @@ $(function() {
 	    Game.checkOver();
 	    return true;
 	},
+
 	glow: function() {
 	    var r = this.rect;
 	    r.animate({transform: 's1.1'}, 200);
@@ -113,6 +124,7 @@ $(function() {
 		opacity: 0.7,
 		color: 'yellow'
 	    });
+
 	    setTimeout(function() {
 		r.animate({transform: 's1'}, 60);
 		g.remove();
@@ -126,24 +138,30 @@ $(function() {
 	this._ptr = 0;
 	this._deck = cards || [];
     }
+
     Deck.prototype = {
 	addCard: function(card) {
 	    this._deck.push(card);
 	    this._ptr++;
 	},
+
 	peekCard: function() {
 	    return this._deck[this._ptr - 1];
 	},
+
 	openCard: function() {
 	    this._ptr--;
 	    return this.peekCard();
 	},
+
 	available: function() {
 	    return (this._ptr > 1);
 	},
+
 	closedCards: function() {
 	    return this._ptr - 4;
 	},
+
 	nextThree: function() {
 	    var cards = [],
                 c,
@@ -190,6 +208,7 @@ $(function() {
 	    this.paper.rect(0, 0, this.width, this.height).attr({"fill": "#00bb00"});
 	    this.drawMatrix();
 	},
+
 	drawMatrix: function() {
 	    var s = this.cardSize,
 	        f;  // focus line
@@ -206,6 +225,7 @@ $(function() {
 				this.cardSize + Screen.shim);
 	    f.attr({"stroke-width": 3, "fill": "#ffffcc"});
 	},
+
 	addScore: (function() {
 	    var score = 0;
 	    return (function(s) {
@@ -213,6 +233,7 @@ $(function() {
 		$("#score").html("Score: " + score);
 	    });
 	})(),
+
 	flashMessage: function(msg) {
 	    var fontSize = 57 - msg.length;
 	    var m = this.paper.text(100, 400, msg).
@@ -226,6 +247,7 @@ $(function() {
 		}, 800);
 	    });
 	},
+
 	showMessage: (function() {
 	    var _message = "",
 	        raphaelMsg;
@@ -239,6 +261,7 @@ $(function() {
 		}
 	    });
 	})(),
+
 	drawDeck: function(idx) {
 	    var cards = Decks[idx].nextThree(),
 	        c;
@@ -261,6 +284,7 @@ $(function() {
 	    var count = Decks[idx].closedCards();
 	    if (count > 0) this.drawClosedCards(count, idx);
 	},
+
 	drawClosedCards: function(n, idx) {
 	    var x = this.absolutePos(idx),
 	        y, r;
@@ -272,6 +296,7 @@ $(function() {
 		this.openDecks[idx].push({rect: r});
 	    }
 	},
+
 	drawCardOnDeck: function(card) {
 	    // card.y could be either 0, 1, 2
 	    var scale = 1 - ((3 - card.y) * 0.04);
@@ -279,6 +304,7 @@ $(function() {
 	    if (card.y == 1) card.y = 1.4;
 	    return this.drawCard(card, true, scale);
 	},
+
 	drawCard: function(card, deck, scale) {
             var abs_x = this.absolutePos(card.x),
                 abs_y = this.absolutePos(card.y),
@@ -310,6 +336,7 @@ $(function() {
 	    card.rect.transform("s" + scale);
 	    return card;
 	},
+
 	moveCard: function(card, dx, dy) {
 	    var abs_dx =  dx * (this.cardSize + this.shim),
                 abs_dy =  dy * (this.cardSize + this.shim),
@@ -322,6 +349,7 @@ $(function() {
 	    alert(); // this function is not used at time moment.
 	    return c;
 	},
+
 	absolutePos: function(n) {
 	    return (this.shim + n * (this.cardSize + this.shim));
 	}
@@ -344,15 +372,18 @@ $(function() {
 	    this.cs = 2;
 	    this.selectFocus.glow(true);
 	},
+
 	put: function(x, y, card) {
 	    this._b[y][x] = card;
 	},
+
 	selectFocus: {
 	    glow: function(val) {
 		var s = Board._b[0][Board.ci];
 		s.focus = val;
 		s.redraw();
 	    },
+
 	    moveFocus: function(index) {
 		// When the cursor is on the either edge.
 		if (typeof index === 'undefined') return;
@@ -360,11 +391,13 @@ $(function() {
 		Board.ci = index;
 		this.glow(true);
 	    },
+
 	    availableDeck: function(indexes) {
 		return _.find(indexes, function(c) {
 		    return (isCard(Board._b[0][c]));
 		});
 	    },
+
 	    moveLeft: function() {
 		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
 		    return x < Board.ci;
@@ -373,6 +406,7 @@ $(function() {
 		var idx = this.availableDeck(candidates);
 		this.moveFocus(idx);
 	    },
+
 	    moveRight: function() {
 		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
 		    return x > Board.ci;
@@ -381,6 +415,7 @@ $(function() {
 		this.moveFocus(idx);
 	    }
 	},
+
 	prepareDecks: function() {
 	    for (var i = 0; i < 5; i++) {
 		this._b[0][i] = Decks[i].peekCard().place(i, 0);
@@ -389,6 +424,7 @@ $(function() {
 		Screen.drawDeck(i);
 	    }
 	},
+
 	openNextCard: function(i) {
 	    if (Decks[i].available()) {
 		Decks[i].openCard().place(i, 0);
@@ -407,6 +443,7 @@ $(function() {
 		}
 	    }
 	},
+
 	chooseCard: function() {
 	    var chosen = this._b[0][this.ci];
 	    chosen.move(this.ci, 1);
@@ -417,12 +454,14 @@ $(function() {
 	    this.openNextCard(this.ci);
 	    Screen.drawDeck(this.ci);
 	},
+
 	topPosition: function(x) {
 	    for (var y = 3; y <= 7; y++) {
 		if (isCard(this._b[y][x])) { return y; }
 	    }
 	    return 8; // very bottom
 	},
+
 	isFilled: function() {
 	    var total = 0;
 	    for (var y = 3; y <= 7; y++) {
@@ -432,21 +471,25 @@ $(function() {
 	    }
 	    return (total == 25);
 	},
+
 	onDiagonalLine: function(card) {
 	    var x = card.x,
                 y = card.y;
 	    return (this.onDiagonalAsc(x, y) || this.onDiagonalDesc(x, y));
 	},
+
 	onDiagonalAsc: function(card) {
 	    var x = card.x,
                 y = card.y;
 	    return ((x + y) === 7);
 	},
+
 	onDiagonalDesc: function(card) {
 	    var x = card.x,
                 y = card.y;
 	    return ((y - x) === 3);
 	},
+
 	addScore: function(poker) {
 	    var h = poker.toString().replace(/([A-Z])/g, " $1");
 	    Screen.flashMessage(h);
@@ -456,6 +499,7 @@ $(function() {
 		Screen.addScore(poker.score());
 	    }
 	},
+
 	collectHands: function(card) {
 	    var hands = [],
                 self = this;
@@ -511,6 +555,7 @@ $(function() {
 	    hands = _.filter(hands, function(h) { return h; });
 	    return hands;
 	},
+
 	handCheck: function(card) {
 	    var hands = this.collectHands(card),
 	        h, hand, p;
@@ -581,6 +626,7 @@ $(function() {
 	this.hand.isFourOfAKind  = (JSON.stringify(pairs) === '[4]');
 //	pp(this.hand);
     };
+
     Poker.prototype = {
 	scores: {
 	    OnePair:             200,
@@ -594,6 +640,7 @@ $(function() {
 	    StraightFlush:      2400,
 	    RoyalStraightFlush: 2800
 	},
+
 	toString: function() {
 	    var str = '';
 	    for (var h in this.hand) {
@@ -603,6 +650,7 @@ $(function() {
 	    }
 	    return str;
 	},
+
 	score: function() {
 	    if (this.toString() === '') {
 		return 0;
@@ -619,10 +667,12 @@ $(function() {
 		this.isInDropzone = false;
 		this.isChoosingTheDeck = true;
 	    },
+
 	    dropped: function() {
 		this.isInDropzone = false;
 		this.isChoosingTheDeck = true;
 	    },
+
 	    chosen: function() {
 		this.isInDropzone = true;
 		this.isChoosingTheDeck = false;
@@ -635,6 +685,7 @@ $(function() {
 	    Board.init();
 	    this.State.init();
 	},
+
 	initDecks: function() {
 	    var decks = [];
 
@@ -654,6 +705,7 @@ $(function() {
 	    }
 	    Decks = decks;
 	},
+
 	keyeventInit: function() {
 	    // left-37, up-38, right-39, down-40
 	    $(document).keydown(function(e) {
@@ -697,9 +749,11 @@ $(function() {
 		}
 	    });
 	},
+
 	run: function() {
 	    this.State.isRunning = true;
 	},
+
 	checkOver: function() {
 	    if (Board.isFilled()) {
 		Game.State.isRunning = false;
@@ -708,6 +762,7 @@ $(function() {
 		}, 1000);
 	    }
 	},
+
 	fillAll: function() {
 	    for(var x = 0; x < 5; x++) {
 		for(var y = 0; y <= 6; y++) {
