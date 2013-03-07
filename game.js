@@ -1,5 +1,7 @@
 // TODO:
 // - implement double score lines
+// - implement stages like a real game
+// - use animation when moving a card
 // - force drop after a certain time passed
 // - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made somewhere
