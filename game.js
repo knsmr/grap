@@ -1,12 +1,13 @@
 // TODO:
+// - use test lib like jasmine?
+// - split up classes into files (require.js?)
+//
 // - implement double score lines
 // - implement stages like a real game
 // - use animation when moving a card
 // - force drop after a certain time passed
 // - queue the flash message so they don't overlap at a time
-// - list up all the hands that have been made somewhere
-// - split up classes into files
-// - use jasmine?
+// - list up all the hands that have been made
 
 $(function() {
     var pp = console.log.bind(console);
