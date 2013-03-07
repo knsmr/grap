@@ -369,6 +369,7 @@ $(function() {
 		       ['', '', '', '', ''], // 5
 		       ['', '', '', '', ''], // 6
 		       ['', '', '', '', '']]; // 7
+	    this.chooseLine = this._b[0];
 	    this.prepareDecks();
 	    this.cs = 2;
 	    this.selectFocus.glow(true);
@@ -380,7 +381,7 @@ $(function() {
 
 	selectFocus: {
 	    glow: function(val) {
-		var s = Board._b[0][Board.ci];
+		var s = Board.chooseLine[Board.ci];
 		s.focus = val;
 		s.redraw();
 	    },
@@ -395,7 +396,7 @@ $(function() {
 
 	    availableDeck: function(indexes) {
 		return _.find(indexes, function(c) {
-		    return (isCard(Board._b[0][c]));
+		    return (isCard(Board.chooseLine[c]));
 		});
 	    },
 
@@ -419,7 +420,7 @@ $(function() {
 
 	prepareDecks: function() {
 	    for (var i = 0; i < 5; i++) {
-		this._b[0][i] = Decks[i].peekCard().place(i, 0);
+		this.chooseLine[i] = Decks[i].peekCard().place(i, 0);
 	    }
 	    for (i = 0; i < 5; i++) {
 		Screen.drawDeck(i);
@@ -446,7 +447,7 @@ $(function() {
 	},
 
 	chooseCard: function() {
-	    var chosen = this._b[0][this.ci];
+	    var chosen = this.chooseLine[this.ci];
 	    chosen.move(this.ci, 1);
 	    this.selectedCard = chosen;
 	    chosen.focus = true;
@@ -464,6 +465,7 @@ $(function() {
 	},
 
 	isFilled: function() {
+	    // todo: return false as soon as non card is found
 	    var total = 0;
 	    for (var y = 3; y <= 7; y++) {
 		for (var x = 0; x <= 4; x++) {
@@ -564,7 +566,10 @@ $(function() {
 
 	    for (var i = 0, l = hands.length; i < l; i++) {
 		h = hands[i].sort(function(a, b) { return a.num - b.num; });
-		if (h[0].isJoker()) {  // if it includes a joker
+		// if it includes a joker, try all possible card one
+		// by one and choose the hand that makes the highest
+		// score
+		if (h[0].isJoker()) {
 		    p = _.max(_.map(allCards, function(c) {
 			hand = _.clone(h);
 			hand[0] = c;
