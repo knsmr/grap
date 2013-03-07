@@ -2,12 +2,13 @@
 // - use test lib like jasmine?
 // - split up classes into files (require.js?)
 //
-// - implement double score lines
 // - implement stages like a real game
+// - implement double score lines
 // - use animation when moving a card
 // - force drop after a certain time passed
 // - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made
+// - add sound effect: use howler.js?
 
 $(function() {
     var pp = console.log.bind(console);
@@ -211,20 +212,20 @@ $(function() {
 	},
 
 	drawMatrix: function() {
-	    var s = this.cardSize,
-	        f;  // focus line
+	    // 5 x 5 matrix
 	    for (var y = 3; y <= 7; y++) {
 		for (var x = 0; x < 5; x++) {
 		    this.paper.rect(this.absolutePos(x),
 				    this.absolutePos(y) + Screen.deckSpace,
-				    s, s);
+				    this.cardSize, this.cardSize);
 		}
 	    }
-	    f = this.paper.rect(1,
-				this.absolutePos(3) - Screen.shim / 2,
-				Screen.width - 1,
-				this.cardSize + Screen.shim);
-	    f.attr({"stroke-width": 3, "fill": "#ffffcc"});
+	    // set a background color on the focus line
+	    this.paper.rect(1,
+			    this.absolutePos(3) - Screen.shim / 2,
+			    Screen.width - 1,
+			    this.cardSize + Screen.shim).
+		attr({"stroke-width": 3, "fill": "#ffffcc"});
 	},
 
 	addScore: (function() {
@@ -290,6 +291,7 @@ $(function() {
 	    var x = this.absolutePos(idx),
 	        y, r;
 	    for (var i = n; i > 0; i--) {
+		// need to adjust 68
 		y = 68 - (i * 5);
 		r = this.paper.rect(x, y, this.cardSize, 2);
 		// store the raphael elem to remove it later the same
