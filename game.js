@@ -465,14 +465,14 @@ $(function() {
 	},
 
 	isFilled: function() {
-	    // todo: return false as soon as non card is found
-	    var total = 0;
 	    for (var y = 3; y <= 7; y++) {
 		for (var x = 0; x <= 4; x++) {
-		    if (isCard(this._b[y][x])) { total += 1 };
+		    if (!isCard(this._b[y][x])) {
+			return false;
+		    }
 		}
 	    }
-	    return (total == 25);
+	    return true;
 	},
 
 	onDiagonalLine: function(card) {
