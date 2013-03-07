@@ -214,10 +214,15 @@ $(function() {
 	    });
 	})(),
 	flashMessage: function(msg) {
-	    var m = this.paper.text(100, 400, msg).attr({'font-size': 24});
-	    m.animate({'font-size': 36, x: 180}, 100, function() {
+	    var fontSize = 57 - msg.length;
+	    var m = this.paper.text(100, 400, msg).
+		attr({'font-size': 30, 'stroke': '#cc0000',
+		      'stroke-width': 2, 'fill': 'black'});
+
+	    m.animate({'font-size': fontSize, x: 180}, 100, function() {
 		window.setTimeout(function() {
-		    m.animate({'font-size': 40, y: 0}, 700, function() { m.remove(); });
+		    m.toFront();
+		    m.animate({'font-size': 20, y: 0}, 700, function() { m.remove(); });
 		}, 800);
 	    });
 	},
