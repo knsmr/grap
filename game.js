@@ -736,7 +736,17 @@ $(function() {
 	},
 
 	checkOver: function() {
-	    if (Board.isFilled()) {
+	    if (!Board.isFilled()) return;
+
+	    if (Game.State.stageClear()) {
+		Game.State.isRunnig = false;
+		setTimeout(function() {
+		    Screen.flashMessage("STAGE CLEAR!");
+		}, 3000);
+		setTimeout(function() {
+		    Game.State.gotoNextStage();
+		}, 6000);
+	    } else {
 		Game.State.isRunning = false;
 		setTimeout(function() {
 		    Screen.showMessage("Game Over. Play again? (y)");
@@ -767,6 +777,7 @@ $(function() {
 	    this.isChoosingTheDeck = true;
 	    this.stage = 1;
 	    this.score = 0;
+	    this.show();
 	},
 
 	dropped: function() {
@@ -779,13 +790,46 @@ $(function() {
 	    this.isChoosingTheDeck = false;
 	},
 
+	showScore: function(score) {
+	    $("#score").html("Score: " + this.score + "pt");
+	},
+
 	addScore: function(score) {
 	    this.score += score;
-	    $("#score").html("Score: " + this.score);
+	    this.showScore();
+	},
+
+	show: function() {
+	    this.showScore();
+	    this.showStage();
+	},
+
+	showStage: function() {
+	    $("#stage").html("Stage: " + this.stage + " : " + Game.Stage[this.stage] + "pt");
+	},
+
+	stageClear: function() {
+	    return this.score - Game.Stage[this.stage] >= 0;
+	},
+
+	gotoNextStage: function() {
+	    this.stage++;
+	    this.showStage();
+	    Screen.init();
+	    Game.initDecks();
+	    Board.init();
+	    Game.Stage.isRunning = true;
+	    Game.Stage.isInDropzone = false;
+	    Game.State.isChoosingTheDeck = true;
 	}
     };
 
-    Game.Level = {
+    Game.Stage = {
+	1: 1000,
+	2: 3000,
+	3: 5000,
+	4: 8000,
+	5: 10000
     };
 
     // Run the game.
