@@ -202,9 +202,8 @@ $(function() {
 	init: function() {
 	    this.cardSize   = (this.width - this.shim * 6) / 5;
 	    this.height     = (this.cardSize + this.shim) * 11 + this.shim;
-	    this.deckSpace = (this.cardSize + this.shim) * 3,
+	    this.deckSpace = (this.cardSize + this.shim) * 3;
 
-	    this.addScore('reset');
 	    if (this.paper) { this.paper.remove(); };
 	    this.paper = Raphael("paper", this.width, this.height);
 	    this.paper.rect(0, 0, this.width, this.height).attr({"fill": "#00bb00"});
@@ -227,14 +226,6 @@ $(function() {
 			    this.cardSize + Screen.shim).
 		attr({"stroke-width": 3, "fill": "#ffffcc"});
 	},
-
-	addScore: (function() {
-	    var score = 0;
-	    return (function(s) {
-		score = (s == 'reset') ? 0 : score + s;
-		$("#score").html("Score: " + score);
-	    });
-	})(),
 
 	flashMessage: function(msg) {
 	    var fontSize = 57 - msg.length;
@@ -381,45 +372,6 @@ $(function() {
 	    this._b[y][x] = card;
 	},
 
-	selectFocus: {
-	    glow: function(val) {
-		var s = Board.chooseLine[Board.ci];
-		s.focus = val;
-		s.redraw();
-	    },
-
-	    moveFocus: function(index) {
-		// When the cursor is on the either edge.
-		if (typeof index === 'undefined') return;
-		this.glow(false);
-		Board.ci = index;
-		this.glow(true);
-	    },
-
-	    availableDeck: function(indexes) {
-		return _.find(indexes, function(c) {
-		    return (isCard(Board.chooseLine[c]));
-		});
-	    },
-
-	    moveLeft: function() {
-		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
-		    return x < Board.ci;
-		});
-		candidates.reverse();
-		var idx = this.availableDeck(candidates);
-		this.moveFocus(idx);
-	    },
-
-	    moveRight: function() {
-		var candidates = _.select([0, 1, 2, 3, 4], function(x) {
-		    return x > Board.ci;
-		});
-		var idx = this.availableDeck(candidates);
-		this.moveFocus(idx);
-	    }
-	},
-
 	prepareDecks: function() {
 	    for (var i = 0; i < 5; i++) {
 		this.chooseLine[i] = Decks[i].peekCard().place(i, 0);
@@ -501,7 +453,7 @@ $(function() {
 
 	    var s = poker.score();
 	    if (s != 0) {
-		Screen.addScore(poker.score());
+		Game.State.addScore(poker.score());
 	    }
 	},
 
@@ -590,6 +542,45 @@ $(function() {
 	}
     };
 
+    Board.selectFocus =  {
+	glow: function(val) {
+	    var s = Board.chooseLine[Board.ci];
+	    s.focus = val;
+	    s.redraw();
+	},
+
+	moveFocus: function(index) {
+	    // When the cursor is on the either edge.
+	    if (typeof index === 'undefined') return;
+	    this.glow(false);
+	    Board.ci = index;
+	    this.glow(true);
+	},
+
+	availableDeck: function(indexes) {
+	    return _.find(indexes, function(c) {
+		return (isCard(Board.chooseLine[c]));
+	    });
+	},
+
+	moveLeft: function() {
+	    var candidates = _.select([0, 1, 2, 3, 4], function(x) {
+		return x < Board.ci;
+	    });
+	    candidates.reverse();
+	    var idx = this.availableDeck(candidates);
+	    this.moveFocus(idx);
+	},
+
+	moveRight: function() {
+	    var candidates = _.select([0, 1, 2, 3, 4], function(x) {
+		return x > Board.ci;
+	    });
+	    var idx = this.availableDeck(candidates);
+	    this.moveFocus(idx);
+	}
+    };
+
     function Poker(cards) {
 	// we determine the hand in the constructor
 	cards = cards.sort(function(a, b) { return a.num - b.num; });
@@ -669,24 +660,6 @@ $(function() {
     };
 
     var Game = {
-	State: {
-	    init: function() {
-		this.isRunning = true;
-		this.isInDropzone = false;
-		this.isChoosingTheDeck = true;
-	    },
-
-	    dropped: function() {
-		this.isInDropzone = false;
-		this.isChoosingTheDeck = true;
-	    },
-
-	    chosen: function() {
-		this.isInDropzone = true;
-		this.isChoosingTheDeck = false;
-	    }
-	},
-
 	init: function() {
 	    Screen.init();
 	    this.initDecks();
@@ -779,6 +752,40 @@ $(function() {
 		}
 	    }
 	}
+    };
+
+    Game.State = {
+	isRunning: true,
+	isInDropzone: false,
+	isChoosingTheDeck: true,
+	stage: 1,
+	score: 0,
+
+	init: function() {
+	    this.isRunning = true;
+	    this.isInDropzone = false;
+	    this.isChoosingTheDeck = true;
+	    this.stage = 1;
+	    this.score = 0;
+	},
+
+	dropped: function() {
+	    this.isInDropzone = false;
+	    this.isChoosingTheDeck = true;
+	},
+
+	chosen: function() {
+	    this.isInDropzone = true;
+	    this.isChoosingTheDeck = false;
+	},
+
+	addScore: function(score) {
+	    this.score += score;
+	    $("#score").html("Score: " + this.score);
+	}
+    };
+
+    Game.Level = {
     };
 
     // Run the game.
