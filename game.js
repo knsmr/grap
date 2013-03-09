@@ -2,7 +2,6 @@
 // - use test lib like jasmine?
 // - split up classes into files (require.js?)
 //
-// - implement stages like a real game
 // - implement double score lines
 // - use animation when moving a card
 // - force drop after a certain time passed
@@ -366,6 +365,9 @@ $(function() {
 	    this.prepareDecks();
 	    this.cs = 2;
 	    this.selectFocus.glow(true);
+
+	    Game.State.isInDropzone = false;
+	    Game.State.isChoosingTheDeck = true;
 	},
 
 	put: function(x, y, card) {
@@ -773,10 +775,9 @@ $(function() {
 
 	init: function() {
 	    this.isRunning = true;
-	    this.isInDropzone = false;
-	    this.isChoosingTheDeck = true;
 	    this.stage = 1;
 	    this.score = 0;
+	    this.totalScore = 0;
 	    this.show();
 	},
 
@@ -790,17 +791,26 @@ $(function() {
 	    this.isChoosingTheDeck = false;
 	},
 
-	showScore: function(score) {
+	showScore: function() {
 	    $("#score").html("Score: " + this.score + "pt");
+	    var color = this.stageClear() ? '#88aaff' : '#ffbb33';
+	    $("#score").css('background', color);
+	},
+
+	showTotalScore: function() {
+	    $("#total-score").html("Total Score: " + this.totalScore + "pt");
 	},
 
 	addScore: function(score) {
 	    this.score += score;
+	    this.totalScore += score;
 	    this.showScore();
+	    this.showTotalScore();
 	},
 
 	show: function() {
 	    this.showScore();
+	    this.showTotalScore();
 	    this.showStage();
 	},
 
@@ -813,14 +823,19 @@ $(function() {
 	},
 
 	gotoNextStage: function() {
+	    this.totalScore += this.score;
 	    this.stage++;
-	    this.showStage();
+	    setTimeout(function() {
+		Screen.flashMessage("STAGE " + Game.State.stage);
+	    }, 200);
+
+	    this.score = 0;
+	    this.show();
+
 	    Screen.init();
 	    Game.initDecks();
 	    Board.init();
 	    Game.Stage.isRunning = true;
-	    Game.Stage.isInDropzone = false;
-	    Game.State.isChoosingTheDeck = true;
 	}
     };
 
