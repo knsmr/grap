@@ -674,6 +674,7 @@ $(function() {
 	},
 
 	countPairs: function() {
+	    // count the number of pairs and triplets and so forth
 	    // [1, 1, 3, 4, 5] -> [2]
 	    // [1, 1, 3, 3, 5] -> [2, 2]
 	    // [1, 1, 3, 3, 3] -> [2, 3]
