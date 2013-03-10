@@ -1,6 +1,7 @@
 // TODO:
 // - use test lib like jasmine?
 // - split up classes into files (require.js?)
+// - remove jquery dependency
 // - use custome events like below
 //   https://github.com/goldfire/howler.js/blob/master/howler.js#L847
 //
