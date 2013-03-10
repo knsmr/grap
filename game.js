@@ -584,34 +584,10 @@ $(function() {
     };
 
     function Poker(cards) {
-	// we determine the hand in the constructor
 	cards = cards.sort(function(a, b) { return a.num - b.num; });
 	this.cards = cards;
 	this.hand = {};
-
-	this.hand.isFlush         = this.isFlush();
-	this.hand.isStraight      = this.isStraight();
-	this.hand.isRoyalStraight = this.isRoyalStraight();
-	this.pairs                = this.countPairs();
-
-	if (this.hand.isStraight && this.hand.isFlush) {
-	    // make sure there's only one hand matching
-	    this.hand.isStraight           = false;
-	    this.hand.isFlush              = false;
-	    this.hand.isStraightFlush      = true;
-	};
-
-	if (this.hand.isRoyalStraight && this.hand.isFlush) {
-	    this.hand.isRoyalStraight      = false;
-	    this.hand.isFlush              = false;
-	    this.hand.isRoyalStraightFlush = true;
-	};
-
-	this.hand.isOnePair      = (JSON.stringify(this.pairs) === '[2]');
-	this.hand.isTwoPair      = (JSON.stringify(this.pairs) === '[2,2]');
-	this.hand.isThreeOfAKind = (JSON.stringify(this.pairs) === '[3]');
-	this.hand.isFullHouse    = (JSON.stringify(this.pairs) === '[2,3]');
-	this.hand.isFourOfAKind  = (JSON.stringify(this.pairs) === '[4]');
+	this.determineHand();
 //	pp(this.hand);
     };
 
@@ -645,6 +621,32 @@ $(function() {
 	    } else {
 		return this.scores[this.toString()];
 	    }
+	},
+
+	determineHand: function() {
+	    this.hand.isFlush         = this.isFlush();
+	    this.hand.isStraight      = this.isStraight();
+	    this.hand.isRoyalStraight = this.isRoyalStraight();
+	    this.pairs                = JSON.stringify(this.countPairs());
+
+	    if (this.hand.isStraight && this.hand.isFlush) {
+		// make sure there's only one hand matching
+		this.hand.isStraight           = false;
+		this.hand.isFlush              = false;
+		this.hand.isStraightFlush      = true;
+	    };
+
+	    if (this.hand.isRoyalStraight && this.hand.isFlush) {
+		this.hand.isRoyalStraight      = false;
+		this.hand.isFlush              = false;
+		this.hand.isRoyalStraightFlush = true;
+	    };
+
+	    this.hand.isOnePair      = (this.pairs === '[2]');
+	    this.hand.isTwoPair      = (this.pairs === '[2,2]');
+	    this.hand.isThreeOfAKind = (this.pairs === '[3]');
+	    this.hand.isFullHouse    = (this.pairs === '[2,3]');
+	    this.hand.isFourOfAKind  = (this.pairs === '[4]');
 	},
 
 	isFlush: function() {
