@@ -655,19 +655,16 @@ $(function() {
 	},
 
 	isStraight: function() {
-	    var cards = this.cards,
-                result = true;
 	    for (var i = 1; i < 5; i++) {
-		if (cards[0].num + i !== cards[i].num) {
-		    result = false;
+		if (this.cards[0].num + i !== this.cards[i].num) {
+		    return false;
 		}
 	    }
-	    return result;
+	    return true;
 	},
 
 	isRoyalStraight: function () {
-	    var cards = this.cards;
-	    var numbers = _.map(cards, function(c) { return c.num; });
+	    var numbers = _.map(this.cards, function(c) { return c.num; });
 	    if (JSON.stringify(numbers) === '[1,10,11,12,13]') {
 		return true;
 	    };
@@ -675,9 +672,12 @@ $(function() {
 	},
 
 	countPairs: function() {
-	    var cards = this.cards,
-                count, pairs;
-	    count = _.countBy(cards, function(c) { return c.num; });
+	    // [1, 1, 3, 4, 5] -> [2]
+	    // [1, 1, 3, 3, 5] -> [2, 2]
+	    // [1, 1, 3, 3, 3] -> [2, 3]
+	    // [1, 2, 3, 3, 3] -> [3]
+            var count, pairs;
+	    count = _.countBy(this.cards, function(c) { return c.num; });
 	    pairs = _.filter(count, function(p) { return p >= 2; }).sort();
 	    return pairs;
 	}
