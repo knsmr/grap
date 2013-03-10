@@ -8,6 +8,7 @@
 // - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made
 // - add sound effect: use howler.js?
+// - calculate the position of messages and decks from the width
 
 $(function() {
     var pp = console.log.bind(console);
@@ -226,6 +227,7 @@ $(function() {
 		attr({"stroke-width": 3, "fill": "#ffffcc"});
 	},
 
+	// TODO: merge two message functions and take options instead
 	flashMessage: function(msg) {
 	    var fontSize = 57 - msg.length;
 	    var m = this.paper.text(100, 400, msg).
