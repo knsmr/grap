@@ -629,8 +629,18 @@ $(function() {
 	    this.hand.isRoyalStraight = this.isRoyalStraight();
 	    this.pairs                = JSON.stringify(this.countPairs());
 
+	    this.hand.isOnePair      = (this.pairs === '[2]');
+	    this.hand.isTwoPair      = (this.pairs === '[2,2]');
+	    this.hand.isThreeOfAKind = (this.pairs === '[3]');
+	    this.hand.isFullHouse    = (this.pairs === '[2,3]');
+	    this.hand.isFourOfAKind  = (this.pairs === '[4]');
+
+	    this.resolveDuplucation();
+	},
+
+	resolveDuplucation: function() {
+	    // make sure there's only one hand matching
 	    if (this.hand.isStraight && this.hand.isFlush) {
-		// make sure there's only one hand matching
 		this.hand.isStraight           = false;
 		this.hand.isFlush              = false;
 		this.hand.isStraightFlush      = true;
@@ -641,12 +651,6 @@ $(function() {
 		this.hand.isFlush              = false;
 		this.hand.isRoyalStraightFlush = true;
 	    };
-
-	    this.hand.isOnePair      = (this.pairs === '[2]');
-	    this.hand.isTwoPair      = (this.pairs === '[2,2]');
-	    this.hand.isThreeOfAKind = (this.pairs === '[3]');
-	    this.hand.isFullHouse    = (this.pairs === '[2,3]');
-	    this.hand.isFourOfAKind  = (this.pairs === '[4]');
 	},
 
 	isFlush: function() {
