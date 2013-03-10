@@ -602,7 +602,8 @@ $(function() {
 	    RoyalStraight:      1800,
 	    Flush:              1000,
 	    StraightFlush:      2400,
-	    RoyalStraightFlush: 2800
+	    RoyalStraightFlush: 2800,
+	    FiveOfAKind:        3000
 	},
 
 	toString: function() {
@@ -634,6 +635,7 @@ $(function() {
 	    this.hand.isThreeOfAKind = (this.pairs === '[3]');
 	    this.hand.isFullHouse    = (this.pairs === '[2,3]');
 	    this.hand.isFourOfAKind  = (this.pairs === '[4]');
+	    this.hand.isFiveOfAKind  = (this.pairs === '[5]');
 
 	    this.resolveDuplucation();
 	},
@@ -901,7 +903,8 @@ $(function() {
 		[[0,5], [0,4], [0,3], [0,2], [0,6], 'isStraightFlush'],
 		[[0,1], [0,10], [1,11], [2,12], [0,13], 'isRoyalStraight'],
 		[[0,1], [0,2], [0,4], [0,5], [0,3], 'isStraightFlush'],
-		[[0,1], [0,10], [0,11], [0,12], [0,13], 'isRoyalStraightFlush']
+		[[0,1], [0,10], [0,11], [0,12], [0,13], 'isRoyalStraightFlush'],
+		[[0,1], [1,1], [2,1], [3,1], [3,1], 'isFiveOfAKind']
 	    ];
     var testSuccess = true;
 
