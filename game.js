@@ -586,24 +586,13 @@ $(function() {
     function Poker(cards) {
 	// we determine the hand in the constructor
 	cards = cards.sort(function(a, b) { return a.num - b.num; });
+	this.cards = cards;
 	this.hand = {};
 
-	this.hand.isFlush = _.every(cards, function(c) {
-            return c.suit === cards[0].suit;
-	});
-
-	this.hand.isStraight = true;
-	for (var i = 1; i < 5; i++) {
-	    if (cards[0].num + i !== cards[i].num) {
-		this.hand.isStraight = false;
-	    }
-	};
-
-	this.hand.isRoyalStraight = (function() {
-	    var h = _.map(cards, function(c) { return c.num; });
-	    if (JSON.stringify(h) === '[1,10,11,12,13]') { return true; };
-	    return false;
-	})();
+	this.hand.isFlush         = this.isFlush();
+	this.hand.isStraight      = this.isStraight();
+	this.hand.isRoyalStraight = this.isRoyalStraight();
+	this.pairs                = this.countPairs();
 
 	if (this.hand.isStraight && this.hand.isFlush) {
 	    // make sure there's only one hand matching
@@ -618,13 +607,11 @@ $(function() {
 	    this.hand.isRoyalStraightFlush = true;
 	};
 
-	var count = _.countBy(cards, function(c) { return c.num; });
-	var pairs = _.filter(count, function(p) { return p >= 2; }).sort();
-	this.hand.isOnePair      = (JSON.stringify(pairs) === '[2]');
-	this.hand.isTwoPair      = (JSON.stringify(pairs) === '[2,2]');
-	this.hand.isThreeOfAKind = (JSON.stringify(pairs) === '[3]');
-	this.hand.isFullHouse    = (JSON.stringify(pairs) === '[2,3]');
-	this.hand.isFourOfAKind  = (JSON.stringify(pairs) === '[4]');
+	this.hand.isOnePair      = (JSON.stringify(this.pairs) === '[2]');
+	this.hand.isTwoPair      = (JSON.stringify(this.pairs) === '[2,2]');
+	this.hand.isThreeOfAKind = (JSON.stringify(this.pairs) === '[3]');
+	this.hand.isFullHouse    = (JSON.stringify(this.pairs) === '[2,3]');
+	this.hand.isFourOfAKind  = (JSON.stringify(this.pairs) === '[4]');
 //	pp(this.hand);
     };
 
@@ -658,6 +645,41 @@ $(function() {
 	    } else {
 		return this.scores[this.toString()];
 	    }
+	},
+
+	isFlush: function() {
+	    var cards = this.cards;
+	    return (_.every(cards, function(c) {
+		return c.suit === cards[0].suit;
+	    }));
+	},
+
+	isStraight: function() {
+	    var cards = this.cards,
+                result = true;
+	    for (var i = 1; i < 5; i++) {
+		if (cards[0].num + i !== cards[i].num) {
+		    result = false;
+		}
+	    }
+	    return result;
+	},
+
+	isRoyalStraight: function () {
+	    var cards = this.cards;
+	    var numbers = _.map(cards, function(c) { return c.num; });
+	    if (JSON.stringify(numbers) === '[1,10,11,12,13]') {
+		return true;
+	    };
+	    return false;
+	},
+
+	countPairs: function() {
+	    var cards = this.cards,
+                count, pairs;
+	    count = _.countBy(cards, function(c) { return c.num; });
+	    pairs = _.filter(count, function(p) { return p >= 2; }).sort();
+	    return pairs;
 	}
     };
 
@@ -855,7 +877,7 @@ $(function() {
     //
     // Some test code.
     //
-    var runTest = false;
+    var runTest = true;
     var testCases =
 	    [
 		[[0,1], [1,1], [2,3], [2,5], [3,10], 'isOnePair'],
