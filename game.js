@@ -438,15 +438,11 @@ $(function() {
 	},
 
 	onDiagonalAsc: function(card) {
-	    var x = card.x,
-                y = card.y;
-	    return ((x + y) === 7);
+	    return ((card.x + card.y) === 7);
 	},
 
 	onDiagonalDesc: function(card) {
-	    var x = card.x,
-                y = card.y;
-	    return ((y - x) === 3);
+	    return ((card.y - card.x) === 3);
 	},
 
 	addScore: function(poker) {
