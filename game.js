@@ -103,7 +103,7 @@ $(function() {
 	    }
 	},
 
-	fall: function() {
+	drop: function() {
 	    var y = Board.topPosition(this.x) - 1;
 	    if (y == 2) return false;
 	    this.focus = false;
@@ -714,7 +714,7 @@ $(function() {
 		    case 40:
 			// drop it
 			if (Game.State.isInDropzone) {
-			    if (Board.selectedCard.fall()) {
+			    if (Board.selectedCard.drop()) {
 				Game.State.dropped();
 			    }
 			} else if (Game.State.isChoosingTheDeck) {
