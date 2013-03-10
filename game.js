@@ -1,6 +1,8 @@
 // TODO:
 // - use test lib like jasmine?
 // - split up classes into files (require.js?)
+// - use custome events like below
+//   https://github.com/goldfire/howler.js/blob/master/howler.js#L847
 //
 // - implement double score lines
 // - use animation when moving a card
@@ -191,8 +193,8 @@ $(function() {
     var Screen = {
 	shim: 7,       // defines px between cards
 	width: 380,
-	height: 0,     // calculate from the width
-	deckSpace: 0, // defines px to make some room to draw decks
+	height: 0,     // will be calculated from the width
+	deckSpace: 0,  // px to make some room to draw decks
 	openDecks: [[], [], [], [], []],
 
 	init: function() {
