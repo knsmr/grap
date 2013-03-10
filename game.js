@@ -20,11 +20,7 @@ $(function() {
 	this.suit = suit;
 	this.num = num;
 	this.focus = false;
-	if (this.isRed()) {
-	    this.color = "#f33";
-	} else {
-	    this.color = "#222";
-	}
+	this.color = this.isRed() ? "#f33" : "#222";
     };
 
     function isCard(o) { return o instanceof Card; };
