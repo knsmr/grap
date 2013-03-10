@@ -694,6 +694,8 @@ $(function() {
 	    this.initDecks();
 	    Board.init();
 	    this.State.init();
+	    this.keyeventInit();
+	    this.State.isRunning = true;
 	},
 
 	initDecks: function() {
@@ -758,10 +760,6 @@ $(function() {
 		    };
 		}
 	    });
-	},
-
-	run: function() {
-	    this.State.isRunning = true;
 	},
 
 	checkOver: function() {
@@ -875,9 +873,7 @@ $(function() {
     };
 
     // Run the game.
-    Game.keyeventInit();
     Game.init();
-    Game.run();
 
     //
     // Some test code.
