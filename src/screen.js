@@ -17,19 +17,20 @@ grap.Screen = {
     },
 
     drawMatrix: function() {
-	// 5 x 5 matrix
+	// draw the 5 x 5 matrix
+	var self = this;
 	for (var y = 3; y <= 7; y++) {
 	    for (var x = 0; x < 5; x++) {
 		this.paper.rect(this.absolutePos(x),
-				this.absolutePos(y) + grap.Screen.deckSpace,
+				this.absolutePos(y) + self.deckSpace,
 				this.cardSize, this.cardSize);
 	    }
 	}
 	// set a background color on the focus line
 	this.paper.rect(1,
-			this.absolutePos(3) - grap.Screen.shim / 2,
-			grap.Screen.width - 1,
-			this.cardSize + grap.Screen.shim).
+			this.absolutePos(3) - self.shim / 2,
+			self.width - 1,
+			this.cardSize + self.shim).
 	    attr({"stroke-width": 3, "fill": "#ffffcc"});
     },
 
