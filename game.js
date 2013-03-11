@@ -24,6 +24,9 @@ var Game = {
 	if (e.type == "load") {
 	    window.removeEventListener("load", this);
 	    this._setup();
+	    if (runTest) {
+		grap.testPoker();
+	    }
 	}
     },
 
@@ -238,7 +241,7 @@ var testCases =
 	];
 var testSuccess = true;
 
-if (runTest) {
+grap.testPoker = function() {
     _.each(testCases, function(c) {
 	var hand = new Array();
 	for (var i = 0; i < 5; i++) {
