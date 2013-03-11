@@ -13,339 +13,7 @@
 // - calculate the position of messages and decks from the width
 
 var pp = console.log.bind(console);
-
-function Card(suit, num) {
-    if ((suit < 0) || (4 <= suit)) {
-	throw("out of range");
-    }
-    this.suit = suit;
-    this.num = num;
-    this.focus = false;
-    this.color = this.isRed() ? "#f33" : "#222";
-};
-
-function isCard(o) { return o instanceof Card; };
-
-Card.generateAll = function() {
-    var deck = [];
-    for (var s = 0; s < 4; s++) {
-	for(var n = 1; n <= 13; n++) {
-	    deck.push(new Card(s, n));
-	}
-    }
-    return deck;
-};
-
-Card.prototype = {
-    Suits: ['♠', '♥', '♦', '♣'],
-    Faces: ['A', 'J', 'Q', 'K'],
-
-    toString: function() {
-	var s, f;
-
-	// if it's a joker
-	if (this.isJoker()) return "★★";
-
-	s = this.Suits[this.suit];
-	if (this.num == 1) {
-	    f = this.Faces[0];
-	} else if (this.num >= 11) {
-	    f = this.Faces[this.num - 10];
-	} else {
-	    f = this.num.toString();
-	}
-	return s + f;
-    },
-
-    isRed: function() {
-	return ((this.suit == 1) || (this.suit == 2));
-    },
-
-    isJoker: function() {
-	return this.num == 0;
-    },
-
-    place: function(x, y) {
-	this.x = x;
-	this.y = y;
-	Board.put(x, y, this);
-	this.draw();
-	return this;
-    },
-
-    draw: function() {
-	Screen.drawCard(this);
-    },
-
-    redraw: function() {
-	this.rect.remove();
-	this.draw();
-    },
-
-    move: function(x, y) {
-	Board.put(this.x, this.y, '');
-	Board.put(x, y, this);
-	this.x = x;
-	this.y = y;
-	this.redraw();
-	return this;
-    },
-    moveLeft:  function() { this.moveSideways(-1); },
-    moveRight: function() { this.moveSideways( 1); },
-
-    moveSideways: function(direction) {
-	if (Game.State.isRunning) {
-	    var i = this.x + direction;
-	    if ((0 <= i) && (i <= 4)) {
-		this.move(i, this.y);
-	    };
-	}
-    },
-
-    drop: function() {
-	var y = Board.topPosition(this.x) - 1;
-	if (y == 2) return false;
-	this.focus = false;
-	this.move(this.x, y);
-	Board.handCheck(this);
-	Board.selectFocus.glow(true);
-	Game.State.dropped();
-	Game.checkOver();
-	return true;
-    },
-
-    glow: function() {
-	var r = this.rect;
-	r.animate({transform: 's1.1'}, 200);
-	var g = this.rect[0].glow({
-	    width: 30,
-	    fill: false,
-	    opacity: 0.7,
-	    color: 'yellow'
-	});
-
-	setTimeout(function() {
-	    r.animate({transform: 's1'}, 60);
-	    g.remove();
-	}, 1000);
-    }
-};
-
-var Decks = []; // a collection to store five decks.
-
-function Deck(cards) {
-    this._ptr = 0;
-    this._deck = cards || [];
-}
-
-Deck.prototype = {
-    addCard: function(card) {
-	this._deck.push(card);
-	this._ptr++;
-    },
-
-    peekCard: function() {
-	return this._deck[this._ptr - 1];
-    },
-
-    openCard: function() {
-	this._ptr--;
-	return this.peekCard();
-    },
-
-    available: function() {
-	return (this._ptr > 1);
-    },
-
-    closedCards: function() {
-	return this._ptr - 4;
-    },
-
-    nextThree: function() {
-	var cards = [],
-     c,
-     p = this._ptr,
-     range;
-	// p: 5 -> 1,2,3
-	// p: 4 -> 0,1,2
-	// p: 3 -> 0,1
-	// p: 2 -> 0
-	// p: 1 -> null
-	// p: 0 -> null
-	if (p >= 4) {
-	    range = _.range(p - 4, p - 1);
-	} else if (p == 3) {
-	    range = [0, 1];
-	} else if (p == 2) {
-	    range = [0];
-	} else {
-	    return null;
-	}
-	var that = this;
-	_.each(range, function(i) {
-	    cards.push(_.clone(that._deck[i]));
-	});
-	return cards.reverse();
-    }
-};
-
-var Screen = {
-    shim: 7,       // defines px between cards
-    width: 380,
-    height: 0,     // will be calculated from the width
-    deckSpace: 0,  // px to make some room to draw decks
-    openDecks: [[], [], [], [], []],
-
-    init: function() {
-	this.cardSize   = (this.width - this.shim * 6) / 5;
-	this.height     = (this.cardSize + this.shim) * 11 + this.shim;
-	this.deckSpace = (this.cardSize + this.shim) * 3;
-
-	if (this.paper) { this.paper.remove(); };
-	this.paper = Raphael("paper", this.width, this.height);
-	this.paper.rect(0, 0, this.width, this.height).attr({"fill": "#00bb00"});
-	this.drawMatrix();
-    },
-
-    drawMatrix: function() {
-	// 5 x 5 matrix
-	for (var y = 3; y <= 7; y++) {
-	    for (var x = 0; x < 5; x++) {
-		this.paper.rect(this.absolutePos(x),
-				this.absolutePos(y) + Screen.deckSpace,
-				this.cardSize, this.cardSize);
-	    }
-	}
-	// set a background color on the focus line
-	this.paper.rect(1,
-			this.absolutePos(3) - Screen.shim / 2,
-			Screen.width - 1,
-			this.cardSize + Screen.shim).
-	    attr({"stroke-width": 3, "fill": "#ffffcc"});
-    },
-
-    // TODO: merge two message functions and take options instead
-    flashMessage: function(msg) {
-	var fontSize = 57 - msg.length;
-	var m = this.paper.text(100, 400, msg).
-	    attr({'font-size': 30, 'stroke': '#cc0000',
-		  'stroke-width': 2, 'fill': 'black'});
-
-	m.animate({'font-size': fontSize, x: 180}, 100, function() {
-	    window.setTimeout(function() {
-		m.toFront();
-		m.animate({'font-size': 20, y: 0}, 700, function() { m.remove(); });
-	    }, 800);
-	});
-    },
-
-    showMessage: (function() {
-	var _message = "",
-     raphaelMsg;
-	return (function(msg) {
-	    if (msg === "") {
-		_message = "";
-		pp(raphaelMsg);
-		raphaelMsg.remove();
-	    } else {
-		raphaelMsg = this.paper.text(200, 400, msg).attr({'font-size': 24});
-	    }
-	});
-    })(),
-
-    drawDeck: function(idx) {
-	var cards = Decks[idx].nextThree(),
-     c;
-
-	_.each(this.openDecks[idx], function(c) {
-	    c.rect.remove();
-	});
-	if (cards === null) return;
-
-	this.openDecks[idx] = [];
-	for (var i = cards.length - 1; i >= 0; i--) {
-	    cards[i].x = idx;
-	    cards[i].y = 2 - i;
-	    c = Screen.drawCardOnDeck(cards[i]);
-	    this.openDecks[idx].push(c);
-	}
-	Board.selectFocus.glow(false);
-
-	// draw cards that are closed
-	var count = Decks[idx].closedCards();
-	if (count > 0) this.drawClosedCards(count, idx);
-    },
-
-    drawClosedCards: function(n, idx) {
-	var x = this.absolutePos(idx),
-     y, r;
-	for (var i = n; i > 0; i--) {
-	    // need to adjust 68
-	    y = 68 - (i * 5);
-	    r = this.paper.rect(x, y, this.cardSize, 2);
-	    // store the raphael elem to remove it later the same
-	    // way as cards.
-	    this.openDecks[idx].push({rect: r});
-	}
-    },
-
-    drawCardOnDeck: function(card) {
-	// card.y could be either 0, 1, 2
-	var scale = 1 - ((3 - card.y) * 0.04);
-	if (card.y == 0) card.y = 0.8;
-	if (card.y == 1) card.y = 1.4;
-	return this.drawCard(card, true, scale);
-    },
-
-    drawCard: function(card, deck, scale) {
-        var abs_x = this.absolutePos(card.x),
-            abs_y = this.absolutePos(card.y),
-            s = 1.0;
-
-	// if it should be drawn on the board, not deck area.
-	if (typeof(deck) === "undefined") { abs_y += Screen.deckSpace; }
-	// if the scale arg is given
-	if (typeof(scale) === "number") { s = scale; }
-
-	// a cardRect consists of two objects: a rect and text
-	var r = this.paper.rect(abs_x, abs_y, this.cardSize, this.cardSize);
-	r.attr({"stroke-width": 3, "fill": "#ffffff"});
-	var t = this.paper.text(abs_x + this.cardSize / 2, abs_y + this.cardSize / 2, card.toString());
-	t.attr({fill: card.color, "font-size": this.cardSize - this.shim * 6});
-
-	// Group the rectangle and the text. Also, set the glowing
-	// effect on the rectangle if the card has a focus.
-	card.rect = this.paper.set();
-	if (card.focus) {
-	    var g = r.glow({
-		width: 10,
-		fill: true,
-		opacity: 0.9,
-		color: 'red'
-	    });
-	};
-	card.rect.push(r, t, g);
-	card.rect.transform("s" + scale);
-	return card;
-    },
-
-    moveCard: function(card, dx, dy) {
-	var abs_dx =  dx * (this.cardSize + this.shim),
-     abs_dy =  dy * (this.cardSize + this.shim),
-     cmd = "t" + abs_dx + "," + abs_dy;
-
-	card.rect.animate({transform: cmd}, 80);
-	var x = card.x,
-     y = card.y;
-	var c = this.drawCard(card.x + dx, card.y + dy, card);
-	alert(); // this function is not used at time moment.
-	return c;
-    },
-
-    absolutePos: function(n) {
-	return (this.shim + n * (this.cardSize + this.shim));
-    }
-};
+var grap = {};  // global namespace for the entire game.
 
 var Board = {
     ci: 2,            // the index of the deck to choose from.
@@ -375,26 +43,26 @@ var Board = {
 
     prepareDecks: function() {
 	for (var i = 0; i < 5; i++) {
-	    this.chooseLine[i] = Decks[i].peekCard().place(i, 0);
+	    this.chooseLine[i] = grap.Decks[i].peekCard().place(i, 0);
 	}
 	for (i = 0; i < 5; i++) {
-	    Screen.drawDeck(i);
+	    grap.Screen.drawDeck(i);
 	}
     },
 
     openNextCard: function(i) {
-	if (Decks[i].available()) {
-	    Decks[i].openCard().place(i, 0);
+	if (grap.Decks[i].available()) {
+	    grap.Decks[i].openCard().place(i, 0);
 	} else {
 	    var availableDecks = [],
 	 left, right;
 	    for (var d = 1; d <= 4; d++) {
 		left  = Board.ci - d;
-		if ((left >= 0) && Decks[left].available()) {
+		if ((left >= 0) && grap.Decks[left].available()) {
 		    return Board.ci -= d;
 		}
 		right = Board.ci + d;
-		if ((right <= 4) && Decks[right].available()) {
+		if ((right <= 4) && grap.Decks[right].available()) {
 		    return Board.ci += d;
 		}
 	    }
@@ -409,7 +77,7 @@ var Board = {
 	chosen.redraw();
 	Game.State.chosen();
 	this.openNextCard(this.ci);
-	Screen.drawDeck(this.ci);
+	grap.Screen.drawDeck(this.ci);
     },
 
     topPosition: function(x) {
@@ -446,7 +114,7 @@ var Board = {
 
     addScore: function(poker) {
 	var h = poker.toString().replace(/([A-Z])/g, " $1");
-	Screen.flashMessage(h);
+	grap.Screen.flashMessage(h);
 
 	var s = poker.score();
 	if (s != 0) {
@@ -489,7 +157,7 @@ var Board = {
 	    pos = fn.call(self, card);
 	    for (var i = 0, ii = pos.length; i < ii; i++) {
 		p = pos[i];
-		if (self._b[p.y][p.x] instanceof Card) {
+		if (self._b[p.y][p.x] instanceof grap.Card) {
 		    hand.push(self._b[p.y][p.x]);
 		}
 	    }
@@ -513,7 +181,7 @@ var Board = {
     handCheck: function(card) {
 	var hands = this.collectHands(card),
      h, hand, p;
-	var allCards = Card.generateAll();
+	var allCards = grap.Card.generateAll();
 
 	for (var i = 0, l = hands.length; i < l; i++) {
 	    h = hands[i].sort(function(a, b) { return a.num - b.num; });
@@ -700,7 +368,7 @@ var Game = {
     },
 
     _setup: function() {
-	Screen.init();
+	grap.Screen.init();
 	this.initDecks();
 	Board.init();
 	this.State.init();
@@ -712,12 +380,12 @@ var Game = {
 	var decks = [];
 
 	for (var i = 0; i < 5; i++) {
-	    decks.push(new Deck());
+	    decks.push(new grap.Deck());
 	}
 
 	var deck = (function() {
-	    var deck = Card.generateAll();
-	    deck.push(new Card(2, 0)); // a joker
+	    var deck = grap.Card.generateAll();
+	    deck.push(new grap.Card(2, 0)); // a joker
 	    return _.shuffle(deck);
 	})();
 
@@ -725,7 +393,7 @@ var Game = {
 	    var d = _.random(4);
 	    decks[d].addCard(deck[i]);
 	}
-	Decks = decks;
+	grap.Decks = decks;
     },
 
     keyeventInit: function() {
@@ -778,7 +446,7 @@ var Game = {
 	if (Game.State.stageClear()) {
 	    Game.State.isRunnig = false;
 	    setTimeout(function() {
-		Screen.flashMessage("STAGE CLEAR!");
+		grap.Screen.flashMessage("STAGE CLEAR!");
 	    }, 3000);
 	    setTimeout(function() {
 		Game.State.gotoNextStage();
@@ -786,7 +454,7 @@ var Game = {
 	} else {
 	    Game.State.isRunning = false;
 	    setTimeout(function() {
-		Screen.showMessage("Game Over. Play again? (y)");
+		grap.Screen.showMessage("Game Over. Play again? (y)");
 	    }, 1000);
 	}
     },
@@ -795,7 +463,7 @@ var Game = {
 	for(var x = 0; x < 5; x++) {
 	    for(var y = 0; y <= 6; y++) {
 		if (y == 1) continue;
-		Decks[2].openCard().place(x, y);
+		grap.Decks[2].openCard().place(x, y);
 	    }
 	}
     }
@@ -861,13 +529,13 @@ Game.State = {
 	this.totalScore += this.score;
 	this.stage++;
 	setTimeout(function() {
-	    Screen.flashMessage("STAGE " + Game.State.stage);
+	    grap.Screen.flashMessage("STAGE " + Game.State.stage);
 	}, 200);
 
 	this.score = 0;
 	this.show();
 
-	Screen.init();
+	grap.Screen.init();
 	Game.initDecks();
 	Board.init();
 	Game.Stage.isRunning = true;
@@ -914,7 +582,7 @@ if (runTest) {
     _.each(testCases, function(c) {
 	var hand = new Array();
 	for (var i = 0; i < 5; i++) {
-     	    hand.push(new Card(c[i][0], c[i][1]));
+     	    hand.push(new grap.Card(c[i][0], c[i][1]));
 	}
 	var p = new Poker(hand);
 	var kindOfHands = _.size(_.select(p.hand, function(h) { return h; }));
