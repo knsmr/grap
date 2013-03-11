@@ -175,12 +175,12 @@ grap.Board = {
 		p = _.max(_.map(allCards, function(c) {
 		    hand = _.clone(h);
 		    hand[0] = c;
-		    return new Poker(hand);
+		    return new grap.Poker(hand);
 		}), function(p) {
 		    return p.score();
 		});
 	    } else {
-		p = new Poker(hands[i]);
+		p = new grap.Poker(hands[i]);
 	    }
 	    if (p.score()) {
 		this.addScore(p);
