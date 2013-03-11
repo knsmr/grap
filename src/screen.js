@@ -78,7 +78,7 @@ grap.Screen = {
 	    c = grap.Screen.drawCardOnDeck(cards[i]);
 	    this.openDecks[idx].push(c);
 	}
-	Board.selectFocus.glow(false);
+	grap.Board.selectFocus.glow(false);
 
 	// draw cards that are closed
 	var count = grap.Decks[idx].closedCards();

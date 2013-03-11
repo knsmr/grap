@@ -52,7 +52,7 @@ grap.Card.prototype = {
     place: function(x, y) {
 	this.x = x;
 	this.y = y;
-	Board.put(x, y, this);
+	grap.Board.put(x, y, this);
 	this.draw();
 	return this;
     },
@@ -67,8 +67,8 @@ grap.Card.prototype = {
     },
 
     move: function(x, y) {
-	Board.put(this.x, this.y, '');
-	Board.put(x, y, this);
+	grap.Board.put(this.x, this.y, '');
+	grap.Board.put(x, y, this);
 	this.x = x;
 	this.y = y;
 	this.redraw();
@@ -87,12 +87,12 @@ grap.Card.prototype = {
     },
 
     drop: function() {
-	var y = Board.topPosition(this.x) - 1;
+	var y = grap.Board.topPosition(this.x) - 1;
 	if (y == 2) return false;
 	this.focus = false;
 	this.move(this.x, y);
-	Board.handCheck(this);
-	Board.selectFocus.glow(true);
+	grap.Board.handCheck(this);
+	grap.Board.selectFocus.glow(true);
 	Game.State.dropped();
 	Game.checkOver();
 	return true;
