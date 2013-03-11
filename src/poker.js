@@ -1,6 +1,5 @@
 grap.Poker = function(cards) {
-    cards = cards.sort(function(a, b) { return a.num - b.num; });
-    this.cards = cards;
+    this.cards = cards.sort(function(a, b) { return a.num - b.num; });
     this.hand = {};
     this.determineHand();
     //	pp(this.hand);

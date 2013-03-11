@@ -1,6 +1,4 @@
 // TODO:
-// - use test lib like jasmine?
-// - split up classes into files (require.js?)
 // - use custome events like below
 //   https://github.com/goldfire/howler.js/blob/master/howler.js#L847
 //
@@ -24,9 +22,6 @@ var Game = {
 	if (e.type == "load") {
 	    window.removeEventListener("load", this);
 	    this._setup();
-	    if (runTest) {
-		grap.testPoker();
-	    }
 	}
     },
 
@@ -215,51 +210,3 @@ Game.Stage = {
 
 // Run the game.
 Game.init();
-
-//
-// Some test code.
-//
-var runTest = true;
-var testCases =
-	[
-	    [[0,1], [1,1], [2,3], [2,5], [3,10], 'isOnePair'],
-	    [[0,1], [1,11], [2,3], [2,11], [3,10], 'isOnePair'],
-	    [[0,1], [1,1], [2,3], [3,3], [3,10], 'isTwoPair'],
-	    [[0,5], [1,1], [2,3], [3,3], [3,5], 'isTwoPair'],
-	    [[0,1], [1,1], [2,1], [3,3], [3,10], 'isThreeOfAKind'],
-	    [[0,1], [1,5], [2,5], [2,9], [3,5], 'isThreeOfAKind'],
-	    [[0,1], [1,1], [2,5], [0,5], [3,5], 'isFullHouse'],
-	    [[0,1], [2,5], [1,1], [0,5], [3,5], 'isFullHouse'],
-	    [[0,1], [2,5], [1,1], [2,1], [3,1], 'isFourOfAKind'],
-	    [[0,5], [2,4], [3,3], [2,2], [0,6], 'isStraight'],
-	    [[0,5], [0,4], [0,3], [0,2], [0,6], 'isStraightFlush'],
-	    [[0,5], [0,4], [0,3], [0,2], [0,6], 'isStraightFlush'],
-	    [[0,1], [0,10], [1,11], [2,12], [0,13], 'isRoyalStraight'],
-	    [[0,1], [0,2], [0,4], [0,5], [0,3], 'isStraightFlush'],
-	    [[0,1], [0,10], [0,11], [0,12], [0,13], 'isRoyalStraightFlush'],
-	    [[0,1], [1,1], [2,1], [3,1], [3,1], 'isFiveOfAKind']
-	];
-var testSuccess = true;
-
-grap.testPoker = function() {
-    _.each(testCases, function(c) {
-	var hand = new Array();
-	for (var i = 0; i < 5; i++) {
-     	    hand.push(new grap.Card(c[i][0], c[i][1]));
-	}
-	var p = new grap.Poker(hand);
-	var kindOfHands = _.size(_.select(p.hand, function(h) { return h; }));
-	if ( kindOfHands !== 1) {
-	    testSuccess = false;
-	    pp("test failed(could not determine to the single hand: " + p.hand);
-	}
-
-	if (!p.hand[_.last(c)]) {
-	    testSuccess = false;
-	    pp("test failed: " + _.last(c));
-	}
-    });
-    if (testSuccess) { pp("test passed: " + testCases.length + " cases"); };
-
-};
-
