@@ -1,0 +1,43 @@
+#paper {
+    margin: 10px;
+}
+
+#stage, #score, #total-score {
+    background: #ffbb33;
+    margin: 5px;
+    padding: 5px 20px;
+    font-size: 110%;
+    font-weight: bold;
+}
+
+#board {
+    float: left;
+}
+
+#pannel {
+    float: left;
+    width: 450px;
+    height: 800px;
+    margin: 10px 0 0 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#pannel p {
+    padding: 10px;
+}
+
+#score-table {
+    margin: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#score-table tr {
+    background-color: #ddddff;
+}
+
+#score-table td, th {
+    padding: 4px;
+}
