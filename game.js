@@ -101,7 +101,7 @@ var Game = {
     checkOver: function() {
 	if (!grap.Board.isFilled()) return;
 
-	if (Game.State.stageClear()) {
+	if (Game.State.isStageClear()) {
 	    Game.State.isRunnig = false;
 	    setTimeout(function() {
 		grap.Screen.flashMessage("STAGE CLEAR!");
@@ -154,7 +154,7 @@ Game.State = {
 
     showScore: function() {
 	$("#score").html("Score: " + this.score + "pt");
-	var color = this.stageClear() ? '#88aaff' : '#ffbb33';
+	var color = this.isStageClear() ? '#88aaff' : '#ffbb33';
 	$("#score").css('background', color);
     },
 
@@ -179,7 +179,7 @@ Game.State = {
 	$("#stage").html("Stage: " + this.stage + " : " + Game.Stage[this.stage] + "pt");
     },
 
-    stageClear: function() {
+    isStageClear: function() {
 	return this.score - Game.Stage[this.stage] >= 0;
     },
 
