@@ -1,11 +1,10 @@
 // TODO:
-// - use custome events like below
-//   https://github.com/goldfire/howler.js/blob/master/howler.js#L847
+// - use require.js
 //
 // - implement double score lines
+// - queue the flash message so they don't overlap at a time(use promise?)
 // - use animation when moving a card
 // - force drop after a certain time passed
-// - queue the flash message so they don't overlap at a time
 // - list up all the hands that have been made
 // - add sound effect: use howler.js?
 // - calculate the position of messages and decks from the width
