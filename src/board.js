@@ -1,6 +1,7 @@
 grap.Board = {
     ci: 2,            // the index of the deck to choose from.
     selectedCard: '', // the card to drop in the dropzone.
+    dlines: [],        // store lines where the score will be doubled
 
     init: function() {
 	this._b = [['', '', '', '', ''], // line 0 : choose zone
@@ -15,6 +16,7 @@ grap.Board = {
 	this.prepareDecks();
 	this.cs = 2;
 	this.selectFocus.glow(true);
+	this.clearDoubleLines();
 
 	Game.State.isInDropzone = false;
 	Game.State.isChoosingTheDeck = true;
@@ -38,7 +40,7 @@ grap.Board = {
 	    grap.Decks[i].openCard().place(i, 0);
 	} else {
 	    var availableDecks = [],
-	 left, right;
+	        left, right;
 	    for (var d = 1; d <= 4; d++) {
 		left  = grap.Board.ci - d;
 		if ((left >= 0) && grap.Decks[left].available()) {
@@ -95,13 +97,39 @@ grap.Board = {
 	return ((card.y - card.x) === 3);
     },
 
+    setDoubleLines: function(i) {
+	var self = this,
+	    ns;
+
+	this.clearDoubleLines();
+	ns = _.take(_.shuffle(_.range(1, 13)), i);
+	_.each(ns, function(n) {
+	    self.dlines.push(new grap.DoubleLine(n));
+	});
+    },
+
+    clearDoubleLines: function() {
+	this.dlines = [];
+    },
+
+    isDoubleLine: function(cards) {
+	return _.any(this.dlines, function(dline) {
+	    return dline.match(cards);
+	});
+    },
+
     addScore: function(poker) {
 	var h = poker.toString().replace(/([A-Z])/g, " $1");
-	grap.Screen.flashMessage(h);
-
 	var s = poker.score();
+
+	if (this.isDoubleLine(poker.cards)) {
+	    pp("double!");
+	    s = s * 2;
+	}
+
+	grap.Screen.flashMessage(h);
 	if (s != 0) {
-	    Game.State.addScore(poker.score());
+	    Game.State.addScore(s);
 	}
     },
 
