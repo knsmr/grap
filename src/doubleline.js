@@ -1,5 +1,6 @@
 grap.DoubleLine = function(n) {
     this.n = n;
+    this.blink();
 };
 
 grap.DoubleLine.prototype = {
@@ -43,5 +44,15 @@ grap.DoubleLine.prototype = {
 	}
 
 	return JSON.stringify(this.toPositions()) == JSON.stringify(cards);
+    },
+
+    blink: function() {
+	var pos = this.toPositions(),
+	    elm;
+
+	_.each(pos, function(p) {
+	    elm = grap.Screen.drawBox(p[0], p[1]);
+	    elm.attr({"stroke-width": 3, "stroke": "#ffbbcc"});
+	});
     }
 };

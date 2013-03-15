@@ -28,6 +28,8 @@ var Game = {
 	grap.Screen.init();
 	this.initDecks();
 	grap.Board.init();
+	// TODO: need to link to stage status
+	grap.Board.setDoubleLines(2);
 	this.State.init();
 	this.keyeventInit();
 	this.State.isRunning = true;
