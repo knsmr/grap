@@ -14,23 +14,31 @@ grap.Screen = {
 	this.paper = Raphael("paper", this.width, this.height);
 	this.paper.rect(0, 0, this.width, this.height).attr({"fill": "#00bb00"});
 	this.drawMatrix();
+	this.drawFocusLine();
+    },
+
+    drawBox: function(x, y) {
+	var elm;
+	elm = this.paper.rect(this.absolutePos(x),
+			      this.absolutePos(y) + this.deckSpace,
+			      this.cardSize, this.cardSize);
+	return elm;
     },
 
     drawMatrix: function() {
 	// draw the 5 x 5 matrix
-	var self = this;
 	for (var y = 3; y <= 7; y++) {
 	    for (var x = 0; x < 5; x++) {
-		this.paper.rect(this.absolutePos(x),
-				this.absolutePos(y) + self.deckSpace,
-				this.cardSize, this.cardSize);
+		this.drawBox(x, y);
 	    }
 	}
-	// set a background color on the focus line
+    },
+
+    drawFocusLine: function() {
 	this.paper.rect(1,
-			this.absolutePos(3) - self.shim / 2,
-			self.width - 1,
-			this.cardSize + self.shim).
+			this.absolutePos(3) - this.shim / 2,
+			this.width - 1,
+			this.cardSize + this.shim).
 	    attr({"stroke-width": 3, "fill": "#ffffcc"});
     },
 
