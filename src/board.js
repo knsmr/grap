@@ -123,7 +123,6 @@ grap.Board = {
 	var s = poker.score();
 
 	if (this.isDoubleLine(poker.cards)) {
-	    pp("double!");
 	    s = s * 2;
 	}
 

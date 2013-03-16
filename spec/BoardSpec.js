@@ -21,6 +21,10 @@ describe("Board", function() {
 	    grap.Board.setDoubleLines(12);
 	});
 
+	afterEach(function() {
+	    grap.Board.clearDoubleLines();
+	});
+
 	it("should have 12 double lines", function() {
 	    expect(grap.Board.dlines.length).toBe(12);
 	});
@@ -36,28 +40,37 @@ describe("Board", function() {
     describe("When there's a one pair completed at the bottom", function() {
 	var p;
 
+	afterEach(function() {
+	    Game.State.init();
+	});
+
 	beforeEach(function() {
-	    /**
-	     * FIXME: This is getting way too confusing. 'cards'
-	     * represent an array of either Cards, positions, or
-	     * suit:num pairs... Just like you define types for each,
-	     * maybe I'd be better off using some sort of naming
-	     * convention.
-	    */
-	    var cards = [[0, 1], [0, 2], [1, 2], [3, 5], [3, 8]],
-                c, h = [];
+	    var suitnum = [[0, 1], [0, 2], [1, 2], [3, 5], [3, 8]],
+                card, cards = [];
 	    for (var i = 0; i < 5; i++) {
-		c = new grap.Card(cards[i][0], cards[i][1]);
-		// FIXME: not working, something is wrong
-//		c.place(1, 1);
-		h.push(c);
+		card = new grap.Card(suitnum[i][0], suitnum[i][1]);
+		card.place(i, 7);
+		cards.push(card);
 	    }
-	    p = new grap.Poker(h);
+	    p = new grap.Poker(cards);
 	});
 
 	it("should add score 200pt", function() {
 	    grap.Board.addScore(p);
 	    expect(Game.State.score).toBe(200);
+	});
+
+	describe("When the bottom line is a double line", function() {
+
+	    beforeEach(function() {
+		grap.Board.setDoubleLines(1);
+		grap.Board.dlines[0].n = 1;
+	    });
+
+	    it("should add score 400pt", function() {
+		grap.Board.addScore(p);
+		expect(Game.State.score).toBe(400);
+	    });
 	});
     });
 });
