@@ -52,7 +52,9 @@ grap.DoubleLine.prototype = {
 
 	_.each(pos, function(p) {
 	    elm = grap.Screen.drawBox(p[0], p[1]);
-	    elm.attr({"stroke-width": 3, "stroke": "#ffbbcc"});
+	    elm.attr({"stroke-width": 3, "stroke": "#ffbbcc"}).
+		transform("s1.1").
+		glow({"color": "#ffbbcc"});
 	});
     }
 };
