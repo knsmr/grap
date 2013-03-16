@@ -30,9 +30,9 @@ grap.Deck.prototype = {
 
     nextThree: function() {
 	var cards = [],
-     c,
-     p = this._ptr,
-     range;
+	    c,
+	    p = this._ptr,
+	    range;
 	// p: 5 -> 1,2,3
 	// p: 4 -> 0,1,2
 	// p: 3 -> 0,1

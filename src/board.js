@@ -85,7 +85,7 @@ grap.Board = {
 
     onDiagonalLine: function(card) {
 	var x = card.x,
-     y = card.y;
+	    y = card.y;
 	return (this.onDiagonalAsc(x, y) || this.onDiagonalDesc(x, y));
     },
 
@@ -134,7 +134,7 @@ grap.Board = {
 
     collectHands: function(card) {
 	var hands = [],
-     self = this;
+	    self = this;
 
 	var posHorizontal = function(card) {
 	    var y = card.y;
@@ -190,7 +190,7 @@ grap.Board = {
 
     handCheck: function(card) {
 	var hands = this.collectHands(card),
-     h, hand, p;
+	    h, hand, p;
 	var allCards = grap.Card.generateAll();
 
 	for (var i = 0, l = hands.length; i < l; i++) {

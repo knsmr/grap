@@ -59,7 +59,7 @@ grap.Screen = {
 
     showMessage: (function() {
 	var _message = "",
-     raphaelMsg;
+	    raphaelMsg;
 	return (function(msg) {
 	    if (msg === "") {
 		_message = "";
@@ -73,7 +73,7 @@ grap.Screen = {
 
     drawDeck: function(idx) {
 	var cards = grap.Decks[idx].nextThree(),
-     c;
+	    c;
 
 	_.each(this.openDecks[idx], function(c) {
 	    c.rect.remove();
@@ -96,7 +96,7 @@ grap.Screen = {
 
     drawClosedCards: function(n, idx) {
 	var x = this.absolutePos(idx),
-     y, r;
+	    y, r;
 	for (var i = n; i > 0; i--) {
 	    // need to adjust 68
 	    y = 68 - (i * 5);
@@ -116,9 +116,9 @@ grap.Screen = {
     },
 
     drawCard: function(card, deck, scale) {
-        var abs_x = this.absolutePos(card.x),
-            abs_y = this.absolutePos(card.y),
-            s = 1.0;
+	var abs_x = this.absolutePos(card.x),
+	    abs_y = this.absolutePos(card.y),
+	    s = 1.0;
 
 	// if it should be drawn on the board, not deck area.
 	if (typeof(deck) === "undefined") { abs_y += grap.Screen.deckSpace; }
@@ -149,12 +149,12 @@ grap.Screen = {
 
     moveCard: function(card, dx, dy) {
 	var abs_dx =  dx * (this.cardSize + this.shim),
-     abs_dy =  dy * (this.cardSize + this.shim),
-     cmd = "t" + abs_dx + "," + abs_dy;
+	    abs_dy =  dy * (this.cardSize + this.shim),
+	    cmd = "t" + abs_dx + "," + abs_dy;
 
 	card.rect.animate({transform: cmd}, 80);
 	var x = card.x,
-     y = card.y;
+	    y = card.y;
 	var c = this.drawCard(card.x + dx, card.y + dy, card);
 	alert(); // this function is not used at time moment.
 	return c;
