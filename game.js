@@ -175,7 +175,7 @@ Game.State = {
 
     showStage: function() {
 	var minScore = Game.Stage[this.stage]['score'];
-	$("#stage").html("Stage: " + this.stage + " : " + minScore + "pt");
+	$("#stage").html("Stage" + this.stage + " Minimum Score: " + minScore + "pt");
     },
 
     isStageClear: function() {
