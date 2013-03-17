@@ -54,28 +54,34 @@ var Game = {
     },
 
     keyeventInit: function() {
-	// left-37, up-38, right-39, down-40
 	$(document).keydown(function(e) {
+	    var keys = {
+		left:  37,
+		up:    38,
+		right: 39,
+		down:  40
+	    };
+
 	    var target;
 	    if (Game.State.isInDropzone) {
 		target = grap.Board.selectedCard;
 	    } else if (Game.State.isChoosingTheDeck) {
 		target = grap.Board.selectFocus;
 	    }
-	    var running = Game.State.isRunning;
 
+	    var running = Game.State.isRunning;
 	    if (running) {
 		switch(e.keyCode) {
-		case 37:
+		case keys['left']:
 		    target.moveLeft();
 		    break;
-		case 38:
+		case keys['up']:
 		    // alert( "up pressed" );
 		    break;
-		case 39:
+		case keys['right']:
 		    target.moveRight();
 		    break;
-		case 40:
+		case keys['down']:
 		    // drop it
 		    if (Game.State.isInDropzone) {
 			if (grap.Board.selectedCard.drop()) {
@@ -91,7 +97,6 @@ var Game = {
 		if(e.keyCode == 89) {
 		    // (y)es key
 		    Game._setup();
-		    Game.run();
 		};
 	    }
 	});

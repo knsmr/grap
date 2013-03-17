@@ -49,12 +49,18 @@ grap.Screen = {
 	    attr({'font-size': 30, 'stroke': '#cc0000',
 		  'stroke-width': 3, 'fill': 'white'});
 
-	m.animate({'font-size': fontSize, x: 180}, 100, function() {
-	    window.setTimeout(function() {
-		m.toFront();
-		m.animate({'font-size': 20, y: 0}, 700, function() { m.remove(); });
-	    }, 800);
-	});
+	if (option) {
+	    m.animate({'font-size': fontSize, x: 180}, 100, function() {
+		window.setTimeout(function() {
+		    m.toFront();
+		    m.animate({'font-size': 20, y: 0}, 700, function() { m.remove(); });
+		}, 800);
+	    });
+	} else {
+	    m.animate({'font-size': fontSize, x: 180}, 100, function() {
+		window.setTimeout(function() {m.remove();}, 1000);
+	    });
+	}
     },
 
     showMessage: (function() {
