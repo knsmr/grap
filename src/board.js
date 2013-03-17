@@ -16,7 +16,7 @@ grap.Board = {
 	this.prepareDecks();
 	this.cs = 2;
 	this.selectFocus.glow(true);
-	this.clearDoubleLines();
+	this.setupDoubleLines();
 
 	Game.State.isInDropzone = false;
 	Game.State.isChoosingTheDeck = true;
@@ -24,6 +24,13 @@ grap.Board = {
 
     put: function(x, y, card) {
 	this._b[y][x] = card;
+    },
+
+    setupDoubleLines: function() {
+	var n;
+	this.clearDoubleLines();
+	n = Game.Stage[Game.State.stage]['dline'];
+	this.setDoubleLines(n);
     },
 
     prepareDecks: function() {

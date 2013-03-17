@@ -1,7 +1,6 @@
 // TODO:
 // - use require.js
 //
-// - implement double score lines
 // - queue the flash message so they don't overlap at a time(use promise?)
 // - use animation when moving a card
 // - force drop after a certain time passed
@@ -27,10 +26,8 @@ var Game = {
     _setup: function() {
 	grap.Screen.init();
 	this.initDecks();
-	grap.Board.init();
-	// TODO: need to link to stage status
-	grap.Board.setDoubleLines(2);
 	this.State.init();
+	grap.Board.init();
 	this.keyeventInit();
 	this.State.isRunning = true;
     },
@@ -177,11 +174,12 @@ Game.State = {
     },
 
     showStage: function() {
-	$("#stage").html("Stage: " + this.stage + " : " + Game.Stage[this.stage] + "pt");
+	var minScore = Game.Stage[this.stage]['score'];
+	$("#stage").html("Stage: " + this.stage + " : " + minScore + "pt");
     },
 
     isStageClear: function() {
-	return this.score - Game.Stage[this.stage] >= 0;
+	return this.score - Game.Stage[this.stage]['score'] >= 0;
     },
 
     gotoNextStage: function() {
@@ -201,11 +199,13 @@ Game.State = {
 };
 
 Game.Stage = {
-    1: 1000,
-    2: 3000,
-    3: 5000,
-    4: 8000,
-    5: 10000
+    1: {score: 3000, dline: 0},
+    2: {score: 5000, dline: 1},
+    3: {score: 8000, dline: 1},
+    4: {score: 10000, dline: 2},
+    5: {score: 15000, dline: 2},
+    6: {score: 20000, dline: 2},
+    7: {score: 30000, dline: 2}
 };
 
 // Run the game.
