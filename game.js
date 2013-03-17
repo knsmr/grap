@@ -1,5 +1,6 @@
 // TODO:
 // - use require.js
+// - rewrite some actions using custom defined events
 //
 // - queue the flash message so they don't overlap at a time(use promise?)
 // - use animation when moving a card
