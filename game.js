@@ -185,7 +185,6 @@ Game.State = {
     },
 
     gotoNextStage: function() {
-	this.totalScore += this.score;
 	this.stage++;
 	setTimeout(function() {
 	    grap.Screen.flashMessage("STAGE " + Game.State.stage);

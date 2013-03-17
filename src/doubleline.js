@@ -48,13 +48,21 @@ grap.DoubleLine.prototype = {
 
     blink: function() {
 	var pos = this.toPositions(),
-	    elm;
+	    elm, anim;
 
 	_.each(pos, function(p) {
 	    elm = grap.Screen.drawBox(p[0], p[1]);
 	    elm.attr({"stroke-width": 3, "stroke": "#ffbbcc"}).
 		transform("s1.1").
 		glow({"color": "#ffbbcc"});
+
+	    /**
+	     * FIXME: This is supposed to repeat the blinking animation.
+	     */
+	    anim = Raphael.animation({stroke: 'black'}, 1000, function() {
+		this.attr({"stroke": "#ffbbcc"});
+	    });
+	    elm.animate(anim.repeat());
 	});
     }
 };
