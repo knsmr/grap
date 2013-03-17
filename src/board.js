@@ -134,9 +134,7 @@ grap.Board = {
 	}
 
 	grap.Screen.flashMessage(h, true);
-	if (s != 0) {
-	    Game.State.addScore(s);
-	}
+	Game.State.addScore(s);
     },
 
     collectHands: function(card) {
