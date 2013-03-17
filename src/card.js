@@ -100,7 +100,7 @@ grap.Card.prototype = {
 
     glow: function() {
 	var r = this.rect;
-	r.animate({transform: 's1.1'}, 200);
+	r.animate({transform: 's1.2r15'}, 100);
 	var g = this.rect[0].glow({
 	    width: 30,
 	    fill: false,
@@ -109,7 +109,7 @@ grap.Card.prototype = {
 	});
 
 	setTimeout(function() {
-	    r.animate({transform: 's1'}, 60);
+	    r.animate({transform: 's1'}, 50);
 	    g.remove();
 	}, 1000);
     }

@@ -19,6 +19,7 @@ var Game = {
     handleEvent: function(e) {
 	if (e.type == "load") {
 	    window.removeEventListener("load", this);
+	    this.keyeventInit();
 	    this._setup();
 	}
     },
@@ -28,7 +29,6 @@ var Game = {
 	this.initDecks();
 	this.State.init();
 	grap.Board.init();
-	this.keyeventInit();
 	this.State.isRunning = true;
     },
 
@@ -89,7 +89,7 @@ var Game = {
 	    } else {
 		if(e.keyCode == 89) {
 		    // (y)es key
-		    Game.init();
+		    Game._setup();
 		    Game.run();
 		};
 	    }

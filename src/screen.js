@@ -43,11 +43,11 @@ grap.Screen = {
     },
 
     // TODO: merge two message functions and take options instead
-    flashMessage: function(msg) {
+    flashMessage: function(msg, option) {
 	var fontSize = 57 - msg.length;
 	var m = this.paper.text(100, 400, msg).
 	    attr({'font-size': 30, 'stroke': '#cc0000',
-		  'stroke-width': 2, 'fill': 'black'});
+		  'stroke-width': 3, 'fill': 'white'});
 
 	m.animate({'font-size': fontSize, x: 180}, 100, function() {
 	    window.setTimeout(function() {
