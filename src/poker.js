@@ -21,13 +21,12 @@ grap.Poker.prototype = {
     },
 
     toString: function() {
-	var str = '';
 	for (var h in this.hand) {
 	    if (this.hand[h]) {
-		str = h.replace(/^is/, '');
+		return h.replace(/^is/, '');
 	    }
 	}
-	return str;
+	return '';
     },
 
     score: function() {
