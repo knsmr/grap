@@ -2,7 +2,6 @@
 // - use require.js
 // - rewrite some actions using custom defined events
 //
-// - queue the flash message so they don't overlap at a time(use promise?)
 // - use animation when moving a card
 // - force drop after a certain time passed
 // - list up all the hands that have been made

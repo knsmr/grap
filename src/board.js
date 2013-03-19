@@ -195,7 +195,7 @@ grap.Board = {
 
     handCheck: function(card) {
 	var hands = this.collectHands(card),
-	    h, hand, p;
+	    h, hand, p, count = 0;
 	var allCards = grap.Card.generateAll();
 
 	for (var i = 0, l = hands.length; i < l; i++) {
@@ -215,8 +215,14 @@ grap.Board = {
 		p = new grap.Poker(hands[i]);
 	    }
 	    if (p.score()) {
-		this.addScore(p);
-		_.each(hands[i], function(card) { card.glow(); });
+		setTimeout((function(p2, i2) {
+		    return function() {
+			grap.Board.addScore(p2);
+			_.each(hands[i2], function(card) { card.glow(); });
+		    };
+		})(p, i), count++ * 1050);
+		// need to wait for a little more than 1000ms since
+		// card glowing action takes 1000ms.
 	    }
 	}
     }
