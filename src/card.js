@@ -86,11 +86,20 @@ grap.Card.prototype = {
         }
     },
 
+    dropHeight: function() {
+        return grap.Board.topPosition(this.x) - 1;
+    },
+
+    isDroppable: function() {
+        return (this.dropHeight() > 2);
+    },
+
     drop: function() {
-        var y = grap.Board.topPosition(this.x) - 1;
-        if (y == 2) return false;
+        if (!this.isDroppable()) return false;
+
+        // TODO: fire a custome event like onDrop instead?
         this.focus = false;
-        this.move(this.x, y);
+        this.move(this.x, this.dropHeight());
         grap.Board.handCheck(this);
         grap.Board.selectFocus.glow(true);
         Game.State.dropped();

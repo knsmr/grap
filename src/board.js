@@ -20,6 +20,8 @@ grap.Board = {
 
         Game.State.isInDropzone = false;
         Game.State.isChoosingTheDeck = true;
+
+//        setInterval(this.forceDrop, 200);
     },
 
     put: function(x, y, card) {
@@ -57,6 +59,46 @@ grap.Board = {
                 if ((right <= 4) && grap.Decks[right].available()) {
                     return grap.Board.ci += d;
                 }
+            }
+        }
+    },
+
+    closestDroppableX: function(x) {
+        /* FIXME: there's still a bug. cannot drop on the very right
+         * column when all other columns are filled up.
+         */
+        var y;
+        for (var i = 1; i <= 4; i++) {
+            if ((0 <= (x - i)) && ((x - i) <= 4)) {
+                y = grap.Board.topPosition(x - i) - 1;
+                if (y > 2) return (x - i);
+            } else if ((0 <= (x + i)) && ((x + i) <= 4)) {
+                y = grap.Board.topPosition(x + i) - 1;
+                if (y > 2) return (x + i);
+            }
+        }
+        return false;
+    },
+
+    // TODO: probably we can merge the code from game.js key down to here.
+    //
+    // Whoa. We cannot use 'this' keyword here, because this function
+    // is called from outside window.setInterval?? Makes sense, but WTF.
+    forceDrop: function() {
+        var sCard, x;
+        if (Game.State.isChoosingTheDeck) {
+            grap.Board.chooseCard();
+            Game.State.chosen();
+        } else if (Game.State.isInDropzone) {
+            sCard = grap.Board.selectedCard;
+            if (sCard.isDroppable()) {
+                sCard.drop();
+                Game.State.dropped();
+            } else {
+                x = grap.Board.closestDroppableX(sCard.x);
+                if (x === false) return;
+                sCard.move(x, sCard.y);
+                sCard.drop();
             }
         }
     },
@@ -210,12 +252,12 @@ grap.Board = {
                 p = new grap.Poker(hands[i]);
             }
             if (p.score()) {
-                setTimeout((function(p2, i2) {
+                grap.Board.addScore(p);
+                setTimeout((function(i2) {
                     return function() {
-                        grap.Board.addScore(p2);
                         _.each(hands[i2], function(card) { card.glow(); });
                     };
-                })(p, i), count++ * 1050);
+                })(i), count++ * 1050);
                 // need to wait for a little more than 1000ms since
                 // card glowing action takes 1000ms.
             }

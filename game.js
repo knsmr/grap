@@ -74,11 +74,13 @@ var Game = {
                 case keys['left']:
                     target.moveLeft();
                     break;
-                case keys['up']:
-                    // alert( "up pressed" );
-                    break;
                 case keys['right']:
                     target.moveRight();
+                    break;
+                case keys['up']:
+                    // alert( "up pressed" );
+                    // as an experiment, we assign this key to forceDrop.
+                    grap.Board.forceDrop();
                     break;
                 case keys['down']:
                     // drop it
@@ -101,7 +103,9 @@ var Game = {
     },
 
     checkOver: function() {
+        // FIXME: need to wait for a little white before checking
         if (!grap.Board.isFilled()) return;
+        Game.State.isRunning = false;
 
         if (Game.State.isStageClear()) {
             Game.State.isRunnig = false;
@@ -112,7 +116,6 @@ var Game = {
                 Game.State.gotoNextStage();
             }, 6000);
         } else {
-            Game.State.isRunning = false;
             setTimeout(function() {
                 grap.Screen.showMessage("Game Over. Play again? (y)");
             }, 1000);
