@@ -29,7 +29,7 @@ grap.Board = {
     setupDoubleLines: function() {
         var n;
         this.clearDoubleLines();
-        n = Game.Stage[Game.State.stage]['dline'];
+        n = Game.Stage[Game.State.stage].dline;
         this.setDoubleLines(n);
     },
 
@@ -70,6 +70,7 @@ grap.Board = {
         Game.State.chosen();
         this.openNextCard(this.ci);
         grap.Screen.drawDeck(this.ci);
+        return true;
     },
 
     topPosition: function(x) {
@@ -88,12 +89,6 @@ grap.Board = {
             }
         }
         return true;
-    },
-
-    onDiagonalLine: function(card) {
-        var x = card.x,
-            y = card.y;
-        return (this.onDiagonalAsc(x, y) || this.onDiagonalDesc(x, y));
     },
 
     onDiagonalAsc: function(card) {

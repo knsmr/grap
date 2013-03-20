@@ -87,9 +87,8 @@ var Game = {
                             Game.State.dropped();
                         }
                     } else if (Game.State.isChoosingTheDeck) {
-                        if (grap.Board.chooseCard()) {
-                            Game.State.chosen();
-                        }
+                        grap.Board.chooseCard();
+                        Game.State.chosen();
                     }
                 }
             } else {
