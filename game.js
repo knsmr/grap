@@ -108,7 +108,6 @@ var Game = {
         Game.State.isRunning = false;
 
         if (Game.State.isStageClear()) {
-            Game.State.isRunnig = false;
             setTimeout(function() {
                 grap.Screen.flashMessage("STAGE CLEAR!");
             }, 3000);
@@ -201,7 +200,7 @@ Game.State = {
         grap.Screen.init();
         Game.initDecks();
         grap.Board.init();
-        Game.Stage.isRunning = true;
+        Game.State.isRunning = true;
     }
 };
 
