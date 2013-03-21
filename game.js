@@ -103,7 +103,7 @@ var Game = {
     },
 
     checkOver: function() {
-        // FIXME: need to wait for a little white before checking
+        // FIXME: need to wait for a little while before checking
         if (!grap.Board.isFilled()) return;
         Game.State.isRunning = false;
 

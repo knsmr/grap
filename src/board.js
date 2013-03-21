@@ -235,7 +235,7 @@ grap.Board = {
 
         for (var i = 0, l = hands.length; i < l; i++) {
             h = hands[i].sort(function(a, b) { return a.num - b.num; });
-            // if it includes a joker, try all possible card one
+            // if it includes a joker, try all possible cards one
             // by one and choose the hand that makes the highest
             // score
             if (h[0].isJoker()) {
