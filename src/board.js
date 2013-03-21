@@ -64,15 +64,13 @@ grap.Board = {
     },
 
     closestDroppableX: function(x) {
-        /* FIXME: there's still a bug. cannot drop on the very right
-         * column when all other columns are filled up.
-         */
         var y;
         for (var i = 1; i <= 4; i++) {
             if ((0 <= (x - i)) && ((x - i) <= 4)) {
                 y = grap.Board.topPosition(x - i) - 1;
                 if (y > 2) return (x - i);
-            } else if ((0 <= (x + i)) && ((x + i) <= 4)) {
+            }
+            if ((0 <= (x + i)) && ((x + i) <= 4)) {
                 y = grap.Board.topPosition(x + i) - 1;
                 if (y > 2) return (x + i);
             }
