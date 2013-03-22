@@ -254,6 +254,7 @@ grap.Board = {
                     return function() {
                         grap.Board.addScore(p2);
                         _.each(hands[i2], function(card) { card.glow(); });
+                        Game.State.numberOfRemainingHandsToGlow--;
                     };
                 })(i, p), count++ * 1050);
                 // need to wait for a little more than 1000ms since

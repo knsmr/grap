@@ -103,22 +103,39 @@ var Game = {
     },
 
     checkOver: function() {
-        // FIXME: need to wait for a little while before checking
-        if (!grap.Board.isFilled()) return;
-        Game.State.isRunning = false;
+        var result;
+        if (grap.Board.isFilled()) {
+            Game.State.isRunning = false;
 
-        if (Game.State.isStageClear()) {
+            // FIXME: Is there any better ways to rewrite this fugly
+            // timer nestings with a global state?
             setTimeout(function() {
-                grap.Screen.flashMessage("STAGE CLEAR!");
-            }, 3000);
-            setTimeout(function() {
-                Game.State.gotoNextStage();
-            }, 6000);
+                if (Game.State.numberOfRemainingHandsToGlow > 0) {
+                    Game.checkOver();
+                    // recurse another 1.2sec to wait for the glowing
+                    // to finish
+                }
+
+                if (Game.State.stageClearCheckDone) return;
+
+                if (Game.State.isStageClear()) {
+                    setTimeout(function() {
+                        Game.State.checkdone = true;
+                        grap.Screen.flashMessage("STAGE CLEAR!");
+                    }, 3000);
+                    setTimeout(function() {
+                        Game.State.gotoNextStage();
+                    }, 6000);
+                } else {
+                    setTimeout(function() {
+                        grap.Screen.showMessage("Game Over. Play again? (y)");
+                    }, 1000);
+                }
+            }, 1200);
         } else {
-            setTimeout(function() {
-                grap.Screen.showMessage("Game Over. Play again? (y)");
-            }, 1000);
+            result = false;
         }
+        return result;
     },
 
     fillAll: function() {
@@ -135,6 +152,8 @@ Game.State = {
     isRunning: true,
     isInDropzone: false,
     isChoosingTheDeck: true,
+    numberOfRemainingHandsToGlow: 0,
+    stageClearChechDone: false,
     stage: 1,
     score: 0,
 
@@ -201,6 +220,7 @@ Game.State = {
         Game.initDecks();
         grap.Board.init();
         Game.State.isRunning = true;
+        Game.State.stageClearChechDone = false;
     }
 };
 
