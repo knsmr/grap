@@ -97,7 +97,7 @@ grap.Card.prototype = {
     drop: function() {
         if (!this.isDroppable()) return false;
 
-        // TODO: fire a custome event like onDrop instead?
+        // TODO: fire a custom event like onDrop instead?
         this.focus = false;
         this.move(this.x, this.dropHeight());
         grap.Board.handCheck(this);

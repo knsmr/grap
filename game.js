@@ -107,7 +107,7 @@ var Game = {
         if (grap.Board.isFilled()) {
             Game.State.isRunning = false;
 
-            // FIXME: Is there any better ways to rewrite this fugly
+            // FIXME: Are there any better ways to rewrite this fugly
             // timer nestings with a global state?
             setTimeout(function() {
                 if (Game.State.numberOfRemainingHandsToGlow > 0) {
