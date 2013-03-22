@@ -2,8 +2,8 @@
 // - use require.js
 // - rewrite some actions using custom defined events
 //
+// - stop the force drop: filled, gameover
 // - use animation when moving a card
-// - force drop after a certain time passed
 // - list up all the hands that have been made
 // - add sound effect: use howler.js?
 // - calculate the position of messages and decks from the width
