@@ -250,12 +250,12 @@ grap.Board = {
                 p = new grap.Poker(hands[i]);
             }
             if (p.score()) {
-                grap.Board.addScore(p);
-                setTimeout((function(i2) {
+                setTimeout((function(i2, p2) {
                     return function() {
+                        grap.Board.addScore(p2);
                         _.each(hands[i2], function(card) { card.glow(); });
                     };
-                })(i), count++ * 1050);
+                })(i, p), count++ * 1050);
                 // need to wait for a little more than 1000ms since
                 // card glowing action takes 1000ms.
             }
