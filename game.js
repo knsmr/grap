@@ -229,9 +229,10 @@ Game.Stage = {
     2: {score: 5000, dline: 1},
     3: {score: 8000, dline: 1},
     4: {score: 10000, dline: 2},
-    5: {score: 15000, dline: 2},
-    6: {score: 20000, dline: 2},
-    7: {score: 30000, dline: 2}
+    5: {score: 12000, dline: 2},
+    6: {score: 20000, dline: 3}, // not sure if this is doable
+    7: {score: 40000, dline: 4},
+    8: {score: 40000, dline: 2}, // clearly, this isn't.
 };
 
 // Run the game.
