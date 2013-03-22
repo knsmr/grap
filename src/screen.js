@@ -44,21 +44,21 @@ grap.Screen = {
 
     // TODO: merge two message functions and take options instead
     flashMessage: function(msg, option) {
-        var fontSize = 57 - msg.length;
-        var m = this.paper.text(100, 400, msg).
+        var fontSize = 46 - msg.length;
+        var m = this.paper.text(30, 300, msg).
             attr({'font-size': 30, 'stroke': '#cc0000',
                   'stroke-width': 3, 'fill': 'white'});
 
         if (option) {
-            m.animate({'font-size': fontSize, x: 180}, 100, function() {
+            m.animate({'font-size': fontSize, x: 150}, 100, function() {
                 window.setTimeout(function() {
                     m.toFront();
                     m.animate({'font-size': 20, y: 0}, 700, function() { m.remove(); });
                 }, 800);
             });
         } else {
-            m.animate({'font-size': fontSize, x: 180}, 100, function() {
-                window.setTimeout(function() {m.remove();}, 1000);
+            m.animate({'font-size': fontSize, x: 150}, 100, function() {
+                window.setTimeout(function() { m.remove(); }, 1000);
             });
         }
     },
@@ -69,10 +69,9 @@ grap.Screen = {
         return (function(msg) {
             if (msg === "") {
                 _message = "";
-                pp(raphaelMsg);
                 raphaelMsg.remove();
             } else {
-                raphaelMsg = this.paper.text(200, 400, msg).attr({'font-size': 24});
+                raphaelMsg = this.paper.text(150, 300, msg).attr({'font-size': 18});
             }
         });
     })(),
@@ -104,8 +103,7 @@ grap.Screen = {
         var x = this.absolutePos(idx),
             y, r;
         for (var i = n; i > 0; i--) {
-            // need to adjust 68
-            y = 68 - (i * 5);
+            y = this.cardSize - (i * 4);
             r = this.paper.rect(x, y, this.cardSize, 2);
             // store the raphael elem to remove it later the same
             // way as cards.
@@ -135,7 +133,7 @@ grap.Screen = {
         var r = this.paper.rect(abs_x, abs_y, this.cardSize, this.cardSize);
         r.attr({"stroke-width": 3, "fill": "#ffffff"});
         var t = this.paper.text(abs_x + this.cardSize / 2, abs_y + this.cardSize / 2, card.toString());
-        t.attr({fill: card.color, "font-size": this.cardSize - this.shim * 6});
+        t.attr({fill: card.color, "font-size": this.cardSize - this.shim * 4});
 
         // Group the rectangle and the text. Also, set the glowing
         // effect on the rectangle if the card has a focus.

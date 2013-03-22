@@ -6,7 +6,7 @@
     background: #ffbb33;
     margin: 5px;
     padding: 5px 20px;
-    font-size: 110%;
+    font-size: 105%;
     font-weight: bold;
 }
 
@@ -28,6 +28,7 @@
 }
 
 .score-table {
+    font-size: 80%;
     width: 330px;
     margin: 10px;
     background-color: white;
@@ -42,7 +43,7 @@
 }
 
 .score-table td, th {
-    padding: 4px;
+    padding: 2px;
 }
 
 h2 {

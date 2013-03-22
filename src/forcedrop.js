@@ -30,8 +30,8 @@ grap.ForceDrop = {
     createBar: function() {
         var scr = grap.Screen,
             bar;
-        bar = scr.paper.rect(scr.shim, 3, 365, 5);
-        bar.attr({'fill': '#99ccff'});
+        bar = scr.paper.rect(scr.shim, 3, scr.cardSize * 5 + scr.shim * 4, 5);
+        bar.attr({'fill': '#99ccff', 'fill-opacity': 0.9});
         bar.animate({'fill': 'red', width: 0}, this.secondsToForce * 1000);
         return bar;
     }
