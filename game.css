@@ -16,8 +16,8 @@
 
 #pannel {
     float: left;
-    width: 450px;
-    height: 900px;
+    background: #eeffff;
+    width: 700px;
     margin: 10px 0 0 20px;
     border: 2px solid black;
     border-radius: 5px;
@@ -27,18 +27,25 @@
     padding: 10px;
 }
 
-#score-table {
+.score-table {
+    width: 330px;
     margin: 10px;
     background-color: white;
-    padding: 10px;
+    padding: 5px;
     border-radius: 3px;
+    float: left;
 }
 
-#score-table tr {
+.score-table tr {
     background-color: #ddddff;
     text-align: center;
 }
 
-#score-table td, th {
+.score-table td, th {
     padding: 4px;
+}
+
+h2 {
+    clear: both;
+    margin: 10px;
 }

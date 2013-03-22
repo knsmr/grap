@@ -1,6 +1,6 @@
 grap.Screen = {
     shim: 7,       // defines px between cards
-    width: 380,
+    width: 300,
     height: 0,     // will be calculated from the width
     deckSpace: 0,  // px to make some room to draw decks
     openDecks: [[], [], [], [], []],
