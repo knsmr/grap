@@ -20,8 +20,6 @@ grap.Board = {
 
         Game.State.isInDropzone = false;
         Game.State.isChoosingTheDeck = true;
-
-//        setInterval(this.forceDrop, 200);
     },
 
     put: function(x, y, card) {

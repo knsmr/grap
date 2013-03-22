@@ -29,7 +29,8 @@ var Game = {
         this.initDecks();
         this.State.init();
         grap.Board.init();
-        this.State.isRunning = true;
+        grap.ForceDrop.init();
+        this.State.run();
     },
 
     initDecks: function() {
@@ -105,7 +106,7 @@ var Game = {
     checkOver: function() {
         var result;
         if (grap.Board.isFilled()) {
-            Game.State.isRunning = false;
+            Game.State.stop();
 
             // FIXME: Are there any better ways to rewrite this fugly
             // timer nestings with a global state?
@@ -152,6 +153,7 @@ Game.State = {
     isRunning: true,
     isInDropzone: false,
     isChoosingTheDeck: true,
+    forceDropTimer: null,
     numberOfRemainingHandsToGlow: 0,
     stageClearChechDone: false,
     stage: 1,
@@ -165,14 +167,26 @@ Game.State = {
         this.show();
     },
 
+    run: function() {
+        this.isRunning = true;
+        grap.ForceDrop.start();
+    },
+
+    stop: function() {
+        this.isRunning = false;
+        grap.ForceDrop.stop();
+    },
+
     dropped: function() {
         this.isInDropzone = false;
         this.isChoosingTheDeck = true;
+        grap.ForceDrop.start();
     },
 
     chosen: function() {
         this.isInDropzone = true;
         this.isChoosingTheDeck = false;
+        grap.ForceDrop.start();
     },
 
     showScore: function() {
@@ -219,6 +233,7 @@ Game.State = {
         grap.Screen.init();
         Game.initDecks();
         grap.Board.init();
+        grap.ForceDrop.start();
         Game.State.isRunning = true;
         Game.State.stageClearChechDone = false;
     }
