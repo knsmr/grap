@@ -131,6 +131,7 @@ var Game = {
                     }, 6000);
                 } else {
                     setTimeout(function() {
+                        Game.State.stop();
                         grap.Screen.showMessage("Game Over. Play again? (y)");
                     }, 1000);
                 }
