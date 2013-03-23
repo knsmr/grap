@@ -6,8 +6,8 @@ grap.ForceDrop = {
     bar: null, // holds a raphael object
 
     init: function(seconds) {
-        // default: wait for 10 seconds to force drop
-        this.secondsToForce = seconds || 10;
+        // default to this seconds to wait for force dropping
+        this.secondsToForce = seconds || 16;
     },
 
     start: function() {
