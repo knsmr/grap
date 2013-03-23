@@ -47,7 +47,7 @@ grap.Screen = {
         var fontSize = 46 - msg.length;
         var m = this.paper.text(30, 300, msg).
             attr({'font-size': 30, 'stroke': '#cc0000',
-                  'stroke-width': 3, 'fill': 'white'});
+                  'stroke-width': 2, 'fill': 'white'});
 
         if (option) {
             m.animate({'font-size': fontSize, x: 150}, 100, function() {
