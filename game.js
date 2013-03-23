@@ -1,8 +1,10 @@
 // TODO:
 // - use require.js
 // - rewrite some actions using custom defined events
+// - remove jQuery
 //
 // - stop the force drop: filled, gameover
+// - create a start/restart dialogue
 // - use animation when moving a card
 // - list up all the hands that have been made
 // - add sound effect: use howler.js?
