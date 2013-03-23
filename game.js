@@ -61,7 +61,11 @@ var Game = {
                 left:  37,
                 up:    38,
                 right: 39,
-                down:  40
+                down:  40,
+                h:     72,
+                j:     74,
+                k:     75,
+                l:     76
             };
 
             var target;
@@ -74,18 +78,21 @@ var Game = {
             var running = Game.State.isRunning;
             if (running) {
                 switch(e.keyCode) {
-                case keys['left']:
+                case keys.left:
+                case keys.h:
                     target.moveLeft();
                     break;
-                case keys['right']:
+                case keys.right:
+                case keys.l:
                     target.moveRight();
                     break;
-                case keys['up']:
-                    // alert( "up pressed" );
+                case keys.up:
+                case keys.k:
                     // as an experiment, we assign this key to forceDrop.
                     grap.Board.forceDrop();
                     break;
-                case keys['down']:
+                case keys.down:
+                case keys.j:
                     // drop it
                     if (Game.State.isInDropzone) {
                         if (grap.Board.selectedCard.drop()) {
