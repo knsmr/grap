@@ -147,15 +147,6 @@ var Game = {
             result = false;
         }
         return result;
-    },
-
-    fillAll: function() {
-        for(var x = 0; x < 5; x++) {
-            for(var y = 0; y <= 6; y++) {
-                if (y == 1) continue;
-                grap.Decks[2].openCard().place(x, y);
-            }
-        }
     }
 };
 
