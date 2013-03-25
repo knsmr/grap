@@ -166,7 +166,7 @@ grap.Board = {
             s = s * 2;
         }
 
-        grap.Screen.flashMessage(h, true);
+        grap.Screen.flashMessage(h, {slideUp: true});
         Game.State.addScore(s);
     },
 

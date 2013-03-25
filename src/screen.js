@@ -44,12 +44,13 @@ grap.Screen = {
 
     // TODO: merge two message functions and take options instead
     flashMessage: function(msg, option) {
+        option = option || {};
         var fontSize = 46 - msg.length;
         var m = this.paper.text(30, 300, msg).
             attr({'font-size': 30, 'stroke': '#cc0000',
                   'stroke-width': 2, 'fill': 'white'});
 
-        if (option) {
+        if (option.slideUp) {
             m.animate({'font-size': fontSize, x: 150}, 100, function() {
                 window.setTimeout(function() {
                     m.toFront();
