@@ -1,18 +1,4 @@
-// TODO:
-// - use require.js
-// - rewrite some actions using custom defined events
-// - define a cleaner state transition table
-// - remove jQuery
-// - use deferred api with either jquery or a custom implementation
-//
-// - stop the force drop: filled, gameover
-// - explicitly show a message when the minimum score surpassed the
-//   required stage score
-// - create a start/restart dialogue
-// - use animation when moving a card
-// - list up all the hands that have been made
-// - add sound effect: use howler.js?
-// - calculate the position of messages and decks from the width
+// Game and Game.state objects control the game.
 
 var pp = console.log.bind(console);
 var grap = {};  // global namespace for the entire game.
