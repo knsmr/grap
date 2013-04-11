@@ -2,6 +2,8 @@
 
 Grap (gravitational poker) is a little game for modern browsers that I've coded as a weekend project.
 
+![Screenshot](https://dl.dropboxusercontent.com/u/296/grap/grap01.png)
+
 As a newbie, I wanted to know what it's like to code in JavaScript. Fiddling with the awesome SVG library Raphael.js, I ended up with a somewhat full-fledged playable game. I was just going to do some experiments with the library, though.
 
 ## How to play
@@ -14,7 +16,7 @@ Grap is a replication of an old game named Ryukyu (琉球). The game hit the Jap
 
 ## TODO
 
-### Implimentation-wise
+### Implementation-wise
 
 - use require.js (still, don't know how)
 - rewrite some actions using custom defined events like onFall (how am I supposed to?)
