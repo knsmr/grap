@@ -27,7 +27,7 @@ Grap is a replication of an old game named Ryukyu (琉球). The game hit the Jap
 ### Game-wise
 
 - bug: stop the force drop when the board is filled or game is over
-- explicitly show some message when the minimum score surpassed the required stage score
+- explicitly show some message when the score surpassed the required minimum score for the stage
 - create a start/restart dialogue
 - use animation when moving and dropping a card
 - list up all the hands that have been made
