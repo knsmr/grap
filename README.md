@@ -1,6 +1,6 @@
 # Grap
 
-Grap (gravitational poker) is a little game for modern browsers that I've coded as a weekend project.
+Grap (gravitational poker) is a little game for modern browsers that I've coded as a weekend project. You can play it [here](https://dl.dropboxusercontent.com/u/296/grap/index.html).
 
 ![Screenshot](https://dl.dropboxusercontent.com/u/296/grap/grap01.png)
 
